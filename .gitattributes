@@ -1,3 +1,3 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-support linguist-vendored
+support/* linguist-vendored
