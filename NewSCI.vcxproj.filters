@@ -1,0 +1,409 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Support Files">
+      <UniqueIdentifier>{46b0ee6d-ba94-4f51-ab17-a72e92a37df2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Support Files\fmod">
+      <UniqueIdentifier>{ba3af033-d653-4f66-bd50-83ddc3663adc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Support Files\lua">
+      <UniqueIdentifier>{575c43d1-5d33-4c50-be3a-cbe06cd5a34b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Support Files\json">
+      <UniqueIdentifier>{afb149bf-5620-4057-a8a1-2e4d35853add}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Support Files\sdl">
+      <UniqueIdentifier>{dc735b59-31da-4a8c-89f8-9f383fae44a5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ports.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fonts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="support\picopng.cpp">
+      <Filter>Support Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ini.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="audio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lapi.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lauxlib.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lbaselib.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lbitlib.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lcode.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lcorolib.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lctype.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\ldblib.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\ldebug.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\ldo.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\ldump.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lfunc.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lgc.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\linit.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\liolib.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\llex.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lmathlib.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lmem.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\loadlib.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lobject.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lopcodes.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\loslib.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lparser.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lstate.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lstring.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lstrlib.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\ltable.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\ltablib.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\ltm.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lundump.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lutf8lib.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lvm.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="support\lua\lzio.c">
+      <Filter>Support Files\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="support\json\JSONValue.cpp">
+      <Filter>Support Files\json</Filter>
+    </ClCompile>
+    <ClCompile Include="support\json\JSON.cpp">
+      <Filter>Support Files\json</Filter>
+    </ClCompile>
+    <ClCompile Include="views.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pictures.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="serializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="res.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="NewSCI.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="NewSCI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ports.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fonts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="audio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ini.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="support\fmod.h">
+      <Filter>Support Files\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="support\fmod_errors.h">
+      <Filter>Support Files\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="support\fmod.hpp">
+      <Filter>Support Files\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="support\fmod_dsp.h">
+      <Filter>Support Files\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lzio.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lapi.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lauxlib.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lcode.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lctype.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\ldebug.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\ldo.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lfunc.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lgc.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\llex.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\llimits.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lmem.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lobject.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lopcodes.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lparser.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lprefix.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lstate.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lstring.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\ltable.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\ltm.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lua.hpp">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\luaconf.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lualib.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lundump.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lvm.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="support\json\JSONValue.h">
+      <Filter>Support Files\json</Filter>
+    </ClInclude>
+    <ClInclude Include="support\json\JSON.h">
+      <Filter>Support Files\json</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sol.hpp">
+      <Filter>Support Files</Filter>
+    </ClInclude>
+    <ClInclude Include="views.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pictures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="serializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\close_code.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_assert.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_bits.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_blendmode.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_config.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_endian.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_error.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_events.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_keyboard.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_keycode.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_log.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_main.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_messagebox.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_mouse.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_name.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_pixels.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_platform.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_quit.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_rect.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_revision.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_rwops.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_scancode.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_stdinc.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_surface.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_syswm.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_timer.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_types.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_video.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\begin_code.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_render.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

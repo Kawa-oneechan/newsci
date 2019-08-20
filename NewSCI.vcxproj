@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{0768E14C-1987-4AA4-BFE0-15664F0FD123}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>NewSCI</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>$(ProjectDir)support\fmod;$(ProjectDir)support\sdl2;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)support\fmod;$(ProjectDir)support\sdl2;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir)support\fmod;$(ProjectDir)support\sdl2;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)support\fmod;$(ProjectDir)support\sdl2;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>fmodex_vc.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winmm.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <OutputFile>$(ProjectDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+    <PreBuildEvent>
+      <Command>packer.exe</Command>
+      <Message>Pack up your shit</Message>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>fmodex_vc.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winmm.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <OutputFile>$(ProjectDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+    <PreBuildEvent>
+      <Command>packer.exe</Command>
+      <Message>Pack up your shit</Message>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="fonts.cpp" />
+    <ClCompile Include="ini.cpp" />
+    <ClCompile Include="audio.cpp" />
+    <ClCompile Include="lua.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="pack.cpp" />
+    <ClCompile Include="pictures.cpp" />
+    <ClCompile Include="ports.cpp" />
+    <ClCompile Include="rect.cpp" />
+    <ClCompile Include="serializer.cpp" />
+    <ClCompile Include="support\json\JSON.cpp" />
+    <ClCompile Include="support\json\JSONValue.cpp" />
+    <ClCompile Include="support\lua\lapi.c" />
+    <ClCompile Include="support\lua\lauxlib.c" />
+    <ClCompile Include="support\lua\lbaselib.c" />
+    <ClCompile Include="support\lua\lbitlib.c" />
+    <ClCompile Include="support\lua\lcode.c" />
+    <ClCompile Include="support\lua\lcorolib.c" />
+    <ClCompile Include="support\lua\lctype.c" />
+    <ClCompile Include="support\lua\ldblib.c" />
+    <ClCompile Include="support\lua\ldebug.c" />
+    <ClCompile Include="support\lua\ldo.c" />
+    <ClCompile Include="support\lua\ldump.c" />
+    <ClCompile Include="support\lua\lfunc.c" />
+    <ClCompile Include="support\lua\lgc.c" />
+    <ClCompile Include="support\lua\linit.c" />
+    <ClCompile Include="support\lua\liolib.c" />
+    <ClCompile Include="support\lua\llex.c" />
+    <ClCompile Include="support\lua\lmathlib.c" />
+    <ClCompile Include="support\lua\lmem.c" />
+    <ClCompile Include="support\lua\loadlib.c" />
+    <ClCompile Include="support\lua\lobject.c" />
+    <ClCompile Include="support\lua\lopcodes.c" />
+    <ClCompile Include="support\lua\loslib.c" />
+    <ClCompile Include="support\lua\lparser.c" />
+    <ClCompile Include="support\lua\lstate.c" />
+    <ClCompile Include="support\lua\lstring.c" />
+    <ClCompile Include="support\lua\lstrlib.c" />
+    <ClCompile Include="support\lua\ltable.c" />
+    <ClCompile Include="support\lua\ltablib.c" />
+    <ClCompile Include="support\lua\ltm.c" />
+    <ClCompile Include="support\lua\lundump.c" />
+    <ClCompile Include="support\lua\lutf8lib.c" />
+    <ClCompile Include="support\lua\lvm.c" />
+    <ClCompile Include="support\lua\lzio.c" />
+    <ClCompile Include="support\picopng.cpp" />
+    <ClCompile Include="views.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="res.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="NewSCI.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="audio.h" />
+    <ClInclude Include="fonts.h" />
+    <ClInclude Include="ini.h" />
+    <ClInclude Include="lua.h" />
+    <ClInclude Include="NewSCI.h" />
+    <ClInclude Include="pack.h" />
+    <ClInclude Include="pictures.h" />
+    <ClInclude Include="ports.h" />
+    <ClInclude Include="serializer.h" />
+    <ClInclude Include="support\fmod.h" />
+    <ClInclude Include="support\fmod.hpp" />
+    <ClInclude Include="support\fmod_dsp.h" />
+    <ClInclude Include="support\fmod_errors.h" />
+    <ClInclude Include="support\json\JSON.h" />
+    <ClInclude Include="support\json\JSONValue.h" />
+    <ClInclude Include="support\lua\lapi.h" />
+    <ClInclude Include="support\lua\lauxlib.h" />
+    <ClInclude Include="support\lua\lcode.h" />
+    <ClInclude Include="support\lua\lctype.h" />
+    <ClInclude Include="support\lua\ldebug.h" />
+    <ClInclude Include="support\lua\ldo.h" />
+    <ClInclude Include="support\lua\lfunc.h" />
+    <ClInclude Include="support\lua\lgc.h" />
+    <ClInclude Include="support\lua\llex.h" />
+    <ClInclude Include="support\lua\llimits.h" />
+    <ClInclude Include="support\lua\lmem.h" />
+    <ClInclude Include="support\lua\lobject.h" />
+    <ClInclude Include="support\lua\lopcodes.h" />
+    <ClInclude Include="support\lua\lparser.h" />
+    <ClInclude Include="support\lua\lprefix.h" />
+    <ClInclude Include="support\lua\lstate.h" />
+    <ClInclude Include="support\lua\lstring.h" />
+    <ClInclude Include="support\lua\ltable.h" />
+    <ClInclude Include="support\lua\ltm.h" />
+    <ClInclude Include="support\lua\lua.hpp" />
+    <ClInclude Include="support\lua\luaconf.h" />
+    <ClInclude Include="support\lua\lualib.h" />
+    <ClInclude Include="support\lua\lundump.h" />
+    <ClInclude Include="support\lua\lvm.h" />
+    <ClInclude Include="support\lua\lzio.h" />
+    <ClInclude Include="support\sdl2\begin_code.h" />
+    <ClInclude Include="support\sdl2\close_code.h" />
+    <ClInclude Include="support\sdl2\SDL.h" />
+    <ClInclude Include="support\sdl2\SDL_assert.h" />
+    <ClInclude Include="support\sdl2\SDL_bits.h" />
+    <ClInclude Include="support\sdl2\SDL_blendmode.h" />
+    <ClInclude Include="support\sdl2\SDL_config.h" />
+    <ClInclude Include="support\sdl2\SDL_endian.h" />
+    <ClInclude Include="support\sdl2\SDL_error.h" />
+    <ClInclude Include="support\sdl2\SDL_events.h" />
+    <ClInclude Include="support\sdl2\SDL_keyboard.h" />
+    <ClInclude Include="support\sdl2\SDL_keycode.h" />
+    <ClInclude Include="support\sdl2\SDL_log.h" />
+    <ClInclude Include="support\sdl2\SDL_main.h" />
+    <ClInclude Include="support\sdl2\SDL_messagebox.h" />
+    <ClInclude Include="support\sdl2\SDL_mouse.h" />
+    <ClInclude Include="support\sdl2\SDL_name.h" />
+    <ClInclude Include="support\sdl2\SDL_pixels.h" />
+    <ClInclude Include="support\sdl2\SDL_platform.h" />
+    <ClInclude Include="support\sdl2\SDL_quit.h" />
+    <ClInclude Include="support\sdl2\SDL_rect.h" />
+    <ClInclude Include="support\sdl2\SDL_render.h" />
+    <ClInclude Include="support\sdl2\SDL_revision.h" />
+    <ClInclude Include="support\sdl2\SDL_rwops.h" />
+    <ClInclude Include="support\sdl2\SDL_scancode.h" />
+    <ClInclude Include="support\sdl2\SDL_stdinc.h" />
+    <ClInclude Include="support\sdl2\SDL_surface.h" />
+    <ClInclude Include="support\sdl2\SDL_syswm.h" />
+    <ClInclude Include="support\sdl2\SDL_timer.h" />
+    <ClInclude Include="support\sdl2\SDL_types.h" />
+    <ClInclude Include="support\sdl2\SDL_video.h" />
+    <ClInclude Include="support\sol.hpp" />
+    <ClInclude Include="types.h" />
+    <ClInclude Include="views.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
