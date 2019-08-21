@@ -92,9 +92,10 @@ Handle LoadFile(std::string filename, unsigned long *size)
 	fseek(fd, 0, SEEK_END);
 	auto len = ftell(fd);
 	fseek(fd, 0, SEEK_SET);
-	char* res = (char*)malloc(len);
+	char* res = (char*)malloc(len + 1);
 	fread(res, sizeof(char), len, fd);
 	fclose(fd);
+	res[len] = 0;
 	if (size) *size = len;
 	return res;
 }

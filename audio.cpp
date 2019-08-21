@@ -46,6 +46,21 @@ Audio::Audio(std::string filename)
 	auto r = system->createStream(data, FMOD_HARDWARE | FMOD_LOOP_NORMAL | FMOD_2D | FMOD_OPENMEMORY, &soundEx, &this->theSound);
 	if (r != FMOD_OK)
 		throw "Could not create stream.";
+	auto ext = filename.substr(filename.length() - 4, 4);
+	if (ext == ".ogg")
+	{
+		FMOD_TAG tag;
+		r = this->theSound->getTag("LOOPSTART", 0, &tag);
+		if (r == FMOD_OK)
+		{
+			unsigned int start = atoi((char*)tag.data);
+			unsigned int end = 0;
+			this->theSound->getLength(&end, FMOD_TIMEUNIT_PCM);
+			r = this->theSound->setLoopPoints(start, FMOD_TIMEUNIT_PCM, end, FMOD_TIMEUNIT_PCM);
+			if (r != FMOD_OK)
+				SDL_LogWarn(SDL_LOG_CATEGORY_AUDIO, "Wanted to set loop point, could not.");
+		}
+	}
 	this->status = 0;
 }
 
