@@ -75,6 +75,9 @@ void View::Initialize()
 }
 
 //----------------------------------------------------------------//
+//TODO: Priority seems to be off, try clicking around to move otherIli.
+//Cnsider reimplementing ViewObj in Lua.
+
 
 ViewObj::ViewObj(View* view)
 {

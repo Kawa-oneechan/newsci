@@ -1,4 +1,5 @@
 #include "NewSCI.h"
+#include "support/fmt/format.h"
 
 extern void Message(std::string text, std::string title);
 extern SDL_Window* sdlWindow;
@@ -16,7 +17,6 @@ extern void ApplyShader(Pixels sourceBuffer);
 
 void ShowFrame(sol::table cast)
 {
-	char buf[256];
 	memcpy(visualBuffer, visualBackground, screenSize * sizeof(Color));
 	memcpy(priorityBuffer, priorityBackground, screenSize * sizeof(Color));
 
@@ -38,25 +38,21 @@ void ShowFrame(sol::table cast)
 			Lua::RunScript("quit = true");
 			break;
 		case SDL_MOUSEMOTION:
-			sprintf_s(buf, 255, "table.insert(events, { type = 1, x = %d, y = %d })", ev.motion.x / mouseDivX, ev.motion.y / mouseDivY);
-			Lua::RunScript(buf);
+			Lua::RunScript(fmt::format("table.insert(events, {{ type = 1, x = {}, y = {} }})", ev.motion.x / mouseDivX, ev.motion.y / mouseDivY));
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 		case SDL_MOUSEBUTTONUP:
-			sprintf_s(buf, 255, "table.insert(events, { type = %d, button = %d, x = %d, y = %d })", (ev.type == SDL_MOUSEBUTTONDOWN) ? 2 : 3,
-				ev.button.button, ev.button.x / mouseDivX, ev.button.y / mouseDivY);
-			Lua::RunScript(buf);
+			Lua::RunScript(fmt::format("table.insert(events, {{ type = {}, button = {}, x = {}, y = {} }})", (ev.type == SDL_MOUSEBUTTONDOWN) ? 2 : 3,
+				ev.button.button, ev.button.x / mouseDivX, ev.button.y / mouseDivY));
 			break;
 		case SDL_KEYDOWN:
 		case SDL_KEYUP:
-			sprintf_s(buf, 255, "table.insert(events, { type = %d, sym = \"%s\", mod = %d, scan = %d, shift = %s, ctrl = %s, alt = %s })", (ev.type == SDL_KEYDOWN) ? 16 : 17,
+			Lua::RunScript(fmt::format("table.insert(events, {{ type = {}, sym = \"{}\", mod = {}, scan = {}, shift = {}, ctrl = {}, alt = {} }})", (ev.type == SDL_KEYDOWN) ? 16 : 17,
 				SDL_GetKeyName(ev.key.keysym.sym),
 				ev.key.keysym.mod & ~KMOD_NUM, ev.key.keysym.scancode,
 				(ev.key.keysym.mod & KMOD_SHIFT) ? "true" : "false",
 				(ev.key.keysym.mod & KMOD_CTRL) ? "true" : "false",
-				(ev.key.keysym.mod & KMOD_ALT) ? "true" : "false"
-				);
-			Lua::RunScript(buf);
+				(ev.key.keysym.mod & KMOD_ALT) ? "true" : "false"));
 			break;
 		}
 	}

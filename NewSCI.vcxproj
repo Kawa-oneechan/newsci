@@ -105,6 +105,7 @@
     <ClCompile Include="ports.cpp" />
     <ClCompile Include="rect.cpp" />
     <ClCompile Include="serializer.cpp" />
+    <ClCompile Include="support\format.cc" />
     <ClCompile Include="support\json\JSON.cpp" />
     <ClCompile Include="support\json\JSONValue.cpp" />
     <ClCompile Include="support\lua\lapi.c" />

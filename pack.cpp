@@ -1,5 +1,6 @@
 #include "NewSCI.h"
 #include <SDL_messagebox.h>
+#include "support/fmt/format.h"
 
 namespace Pack
 {
@@ -14,9 +15,7 @@ namespace Pack
 
 		if (fopen_s(&packFileHd, packFileName.c_str(), "rb") != 0)
 		{
-			char str[256];
-			sprintf_s(str, 256, "Could not load resource pak \"%s\".", packFileName.c_str());
-			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "NewSCI", str, NULL);
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "NewSCI", fmt::format("Could not load resource pak \"{}\".", packFileName).c_str(), NULL);
 			exit(1);
 		}
 		fread(&signature, sizeof(Uint32), 1, packFileHd);
@@ -24,9 +23,11 @@ namespace Pack
 		{
 			fclose(packFileHd);
 			SDL_LogCritical(SDL_LOG_CATEGORY_ASSERT, "File \"%s\" is not a valid dumb pack.", packFileName.c_str());
+			packFileCt = 0;
 		}
-		
-		fread(&packFileCt, sizeof(Uint32), 1, packFileHd);
+		else
+			fread(&packFileCt, sizeof(Uint32), 1, packFileHd);
+
 		packFileList = (PackFileRecord*)malloc(sizeof(PackFileRecord) * packFileCt);
 
 		PackFileRecord* pfr = packFileList;
@@ -73,20 +74,21 @@ namespace Pack
 
 Handle LoadFile(std::string filename, unsigned long *size)
 {
-	Pack::PackFileRecord* pfr = Pack::Find(filename);
-	if (pfr)
-	{
-		SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM, "LoadFile: Loading \"%s\" from pack.", filename.c_str());
-		if (size) *size = pfr->size;
-		return Pack::Read(pfr);
-	}
-
+	auto looseFile = fmt::format("resource\\{}", filename);
 	FILE* fd;
-	if (fopen_s(&fd, filename.c_str(), "rb") != 0)
+	if (fopen_s(&fd, looseFile.c_str(), "rb") != 0)
 	{
+		Pack::PackFileRecord* pfr = Pack::Find(filename);
+		if (pfr)
+		{
+			SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM, "LoadFile: Loading \"%s\" from pack.", filename.c_str());
+			if (size) *size = pfr->size;
+			return Pack::Read(pfr);
+		}
 		SDL_LogError(SDL_LOG_CATEGORY_SYSTEM, "LoadFile: Could not open \"%s\".", filename.c_str());
 		return 0;
 	}
+
 	fseek(fd, 0, SEEK_END);
 	auto len = ftell(fd);
 	fseek(fd, 0, SEEK_SET);

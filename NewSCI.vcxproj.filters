@@ -171,6 +171,9 @@
     <ClCompile Include="serializer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="support\format.cc">
+      <Filter>Support Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="res.rc">
