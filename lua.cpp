@@ -15,17 +15,26 @@ extern Pixels windowBuffer;
 extern void ApplyShader(Pixels sourceBuffer);
 #endif
 
-void ShowFrame(sol::table cast)
+void PrepareFrame()
 {
 	memcpy(visualBuffer, visualBackground, screenSize * sizeof(Color));
 	memcpy(priorityBuffer, priorityBackground, screenSize * sizeof(Color));
+}
 
-	for (auto castMember : cast)
-	{
-		auto viewObj = castMember.second.as<ViewObj*>();
-		viewObj->Draw();
-	}
+void ShowFrame()
+{
+	#ifdef SHADERS
+	ApplyShader(shownBuffer);
+	SDL_UpdateTexture(sdlTexture, NULL, windowBuffer, windowWidth * sizeof(Color));
+#else
+	SDL_UpdateTexture(sdlTexture, NULL, shownBuffer, screenPitch);
+#endif
+	SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
+	SDL_RenderPresent(sdlRenderer);
+}
 
+void HandleEvents()
+{
 	auto mouseDivX = windowWidth / screenWidth;
 	auto mouseDivY = windowHeight / screenHeight;
 
@@ -56,15 +65,6 @@ void ShowFrame(sol::table cast)
 			break;
 		}
 	}
-
-#ifdef SHADERS
-	ApplyShader(shownBuffer);
-	SDL_UpdateTexture(sdlTexture, NULL, windowBuffer, windowWidth * sizeof(Color));
-#else
-	SDL_UpdateTexture(sdlTexture, NULL, shownBuffer, screenPitch);
-#endif
-	SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
-	SDL_RenderPresent(sdlRenderer);
 }
 
 void Display(std::string text, int x, int y)
@@ -77,13 +77,16 @@ void Display(std::string text, int x, int y)
 
 void Lua::Initialize()
 {
-	//lua_setallocf(Sol, CustomAlloc, NULL);
 	Sol.open_libraries(sol::lib::base, sol::lib::table);
 	Sol.set_function("dofile", RunFile);
 	Sol.set_function("Message", Message);
 	Sol.set_function("Delay", SDL_Delay);
+	Sol.set_function("PrepareFrame", PrepareFrame);
 	Sol.set_function("ShowFrame", ShowFrame);
+	Sol.set_function("HandleEvents", HandleEvents);
+	//Sol.set_function("OldShowFrame", OldShowFrame);
 	Sol.set_function("Display", Display);
+	Sol.set_function("ShowScreen", [](int screenID) { shownBuffer = (screenID == 0) ? visualBuffer : priorityBuffer; });
 }
 
 void Lua::RunScript(std::string script)

@@ -255,7 +255,6 @@ int main(int argc, char*argv[])
 	Serializer::Initialize();
 	Audio::Initialize();
 	View::Initialize();
-	ViewObj::Initialize();
 
 	//Lua::RunScript("local win = openwindow({8, 18, 128, 40}, \"Test\", 0, true); message(\"bottom text\", \"top text\"); win:close()");
 	//RunScript("message(\"Hello from Lua! Let's put some more text up in this bitch,\\nand a forced newline because why not?\", \"TOP TEXT\") message(\"You did it again, huh?\", \"Oops!\")");

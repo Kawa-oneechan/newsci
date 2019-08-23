@@ -23,7 +23,6 @@ void Serializer::Load(std::string filename)
 	Serializer::Initialize();
 	Audio::Initialize();
 	View::Initialize();
-	ViewObj::Initialize();
 	Lua::RunFile("engine.lua");
 	Sol["restarting"] = true;
 	Sol["Deserialize"](filename);

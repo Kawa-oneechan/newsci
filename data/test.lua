@@ -29,23 +29,31 @@ Tick = function()
 
 	iliraObject:Move(iliX, 148)
 	local cel = iliraObject.cel + 1
-	if cel == iliraObject.numCels then cel = 0 end
+	-- if cel == iliraObject.numCels then cel = 0 end
+	if cel == iliraObject.view:GetNumCels(iliraObject.loop) then cel = 0 end
 	iliraObject.cel = cel
 	
 	for k, v in pairs(events) do
-		if v.type == 3 then -- mouse click
-			otherIli:Move(v.x, v.y)
-		elseif v.type == 17 then -- key press
-			if v.scan == 62 then -- F5: Save
-				Serialize("test")
-			elseif v.scan == 64 then -- F5: Save
-				Serializer.Load("test")
-			else
-				local msg = "> sym " .. v.sym .. "\n> mod " .. v.mod .. "\n> scan " .. v.scan .. "\n> "
-				if v.ctrl then msg = msg .. "ctrl " end
-				if v.alt then msg = msg .. "alt " end
-				if v.shift then msg = msg .. "shift " end
-				Message(msg, "Key press!")
+		if not v.handled then
+			if v.type == 3 then -- mouse click
+				otherIli:Move(v.x, v.y)
+				v.handled = true
+			elseif v.type == 17 then -- key press
+				if v.scan == 62 then -- F5: Save
+					Serialize("test")
+					v.handled = true
+				elseif v.scan == 64 then -- F5: Save
+					Serializer.Load("test")
+					v.handled = true
+				--[[ else
+					local msg = "> sym " .. v.sym .. "\n> mod " .. v.mod .. "\n> scan " .. v.scan .. "\n> "
+					if v.ctrl then msg = msg .. "ctrl " end
+					if v.alt then msg = msg .. "alt " end
+					if v.shift then msg = msg .. "shift " end
+					v.handled = true
+					Message(msg, "Key press!")
+				]]--
+				end
 			end
 		end
 	end

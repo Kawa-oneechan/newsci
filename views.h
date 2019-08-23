@@ -24,31 +24,8 @@ struct View
 public:
 	static void Initialize();
 	View(std::string filename);
-};
-
-struct ViewObj
-{
-	View* view;
-	int left, top, loop, cel, pri;
-	Rect lastSeenRect;
-	Handle oldBits;
-
-	void DrawCel();
-
-public:
-	static void Initialize();
-	ViewObj(View* view);
-	ViewObj(View* view, int left, int top);
-	void UpdateLastSeenRect();
-	void Draw();
-	void Move(int x, int y);
-	void Set(View* view, int loop, int cel);
-	void SetLoop(int loop);
-	int GetLoop();
+	void Draw(int loop, int cel, int left, int top, int priority, bool noOffset);
+	sol::table GetLastSeenRect(int loop, int cel, int left, int top);
 	int GetNumLoops();
-	void SetCel(int cel);
-	int GetCel();
-	int GetNumCels();
-	void SetPri(int pri);
-	int GetPri();
+	int GetNumCels(int loop);
 };

@@ -78,7 +78,7 @@ inline void SetPixel(int X, int Y, Color C)
 inline void SetPriPixel(int X, int Y, int C, int pri)
 {
 	auto priHere = (int)priorityBuffer[(Y * screenWidth) + X] & 0xFF;
-	if (priHere > pri)
+	if (pri > -1 && priHere > pri)
 		return;
 	SetPixel(X, Y, C);
 	if ((C) >> 24 != 0)

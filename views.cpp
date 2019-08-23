@@ -69,45 +69,74 @@ void View::Initialize()
 {
 	Sol.new_usertype<View>(
 		"View",
-		sol::constructors<View(std::string)>()
-		);
+		sol::constructors<View(std::string)>(),
+		"Draw", &Draw,
+		"GetNumLoops", &GetNumLoops,
+		"GetNumCels", &GetNumCels
+	);
 	Sol.set_function("LoadSimpleScene", &LoadSimpleScene);
 }
 
-//----------------------------------------------------------------//
-//TODO: Priority seems to be off, try clicking around to move otherIli.
-//Cnsider reimplementing ViewObj in Lua.
-
-
-ViewObj::ViewObj(View* view)
+void View::Draw(int loop, int cel, int left, int top, int priority, bool noOffset)
 {
-	this->view = view;
-	this->loop = 0;
-	this->cel = 0;
-	this->pri = -1;
-	this->left = 0;
-	this->top = 0;
-}
-
-ViewObj::ViewObj(View* view, int left, int top) : ViewObj(view)
-{
-	this->view = view;
-	this->loop = 0;
-	this->cel = 0;
-	this->pri = -1;
-	this->left = left;
-	this->top = top;
-}
-
-
-void ViewObj::UpdateLastSeenRect()
-{
-	auto image = view->image;
+	auto image = this->image;
 	auto pixels = image->pixels;
-	if (loop > view->loopCnt)
-		loop = view->loopCnt - 1;
-	auto theLoop = view->loops[loop];
-	if (cel > theLoop.celCnt)
+	if (loop >= this->loopCnt)
+		loop = this->loopCnt - 1;
+	auto theLoop = this->loops[loop];
+	if (cel >= theLoop.celCnt)
+		cel = theLoop.celCnt - 1;
+	auto theCel = theLoop.cels[cel];
+	auto sx = theCel.l;
+	auto sy = theCel.t;
+
+	//get clipped
+	auto w = theCel.w;
+	auto h = theCel.h;
+	auto l = left;
+	auto t = top;
+	if (!noOffset)
+	{
+		l = left - (w / 2) + theCel.x;
+		t = top - (h / 1) + theCel.y;
+	}
+	if (l + w > screenWidth)
+		w = screenWidth - l;
+	if (t + h > screenHeight)
+		h = screenHeight - t;
+	if (l < 0)
+	{
+		sx += -l;
+		w -= -l;
+		l = 0;
+	}
+	if (t < 0)
+	{
+		sy += -t;
+		h -= -t;
+		t = 0;
+	}
+
+	for (auto y = 0; y < h; y++)
+	{
+		for (auto x = 0; x < w; x++)
+		{
+			auto tx = theLoop.mirror ? left + theCel.w - x : left + x;
+			auto ty = t + y;
+			auto pixel = pixels[((sy + y) * image->width) + (sx + x)];
+			SetPriPixel(tx, ty, pixel, priority);
+		}
+	}
+}
+
+sol::table View::GetLastSeenRect(int loop, int cel, int left, int top)
+{
+	auto image = this->image;
+	auto pixels = image->pixels;
+	if (loop >= this->loopCnt)
+		loop = this->loopCnt - 1;
+	auto theLoop = this->loops[loop];
+	if (cel >= theLoop.celCnt)
 		cel = theLoop.celCnt - 1;
 	auto theCel = theLoop.cels[cel];
 
@@ -134,137 +163,18 @@ void ViewObj::UpdateLastSeenRect()
 		//top = 0;
 	}
 
-	lastSeenRect.l = sx;
-	lastSeenRect.t = sy;
-	lastSeenRect.r = sx + w;
-	lastSeenRect.b = sy + h;
+	auto ret = Sol.create_table_with(sx, sy, sx + w, sy + h);
+	return ret;
 }
 
-void ViewObj::DrawCel()
+int View::GetNumLoops()
 {
-	auto image = view->image;
-	auto pixels = image->pixels;
-	if (loop > view->loopCnt)
-		loop = view->loopCnt - 1;
-	auto theLoop = view->loops[loop];
-	if (cel > theLoop.celCnt)
-		cel = theLoop.celCnt - 1;
-	auto theCel = theLoop.cels[cel];
-	auto sx = theCel.l;
-	auto sy = theCel.t;
-
-	//get clipped
-	auto w = theCel.w;
-	auto h = theCel.h;
-	auto l = left - (w / 2) + theCel.x;
-	auto t = top - (h / 1) + theCel.y;
-	if (l + w > screenWidth)
-		w = screenWidth - l;
-	if (t + h > screenHeight)
-		h = screenHeight - t;
-	if (l < 0)
-	{
-		sx += -l;
-		w -= -l;
-		l = 0;
-	}
-	if (t < 0)
-	{
-		sy += -t;
-		h -= -t;
-		t = 0;
-	}
-
-	for (auto y = 0; y < h; y++)
-	{
-		for (auto x = 0; x < w; x++)
-		{
-			auto tx = theLoop.mirror ? left + theCel.w - x : left + x;
-			auto ty = t + y;
-			auto pixel = pixels[((sy + y) * image->width) + (sx + x)];
-			SetPriPixel(tx, ty, pixel, pri);
-		}
-	}
+	return this->loopCnt;
 }
-
-void ViewObj::Draw()
+int View::GetNumCels(int loop)
 {
-	if (oldBits != NULL)
-	{
-		//	Bits::RestoreBits(oldBits);
-	}
-	UpdateLastSeenRect();
-	//oldBits = Bits::SaveBits(&lastSeenRect);
-
-	int origPri = pri;
-	if (pri == -1)
-		pri = lastSeenRect.b;
-
-	DrawCel(); //(view, loop, cel, sx, sy);
-
-	pri = origPri;
-}
-
-void ViewObj::Move(int x, int y)
-{
-	left = x;
-	top = y;
-}
-
-void ViewObj::SetLoop(int loop)
-{
-	this->loop = loop;
-}
-
-int ViewObj::GetLoop()
-{
-	return loop;
-}
-
-int ViewObj::GetNumLoops()
-{
-	return view->loopCnt;
-}
-
-void ViewObj::SetCel(int cel)
-{
-	this->cel = cel;
-}
-
-int ViewObj::GetCel()
-{
-	return cel;
-}
-
-int ViewObj::GetNumCels()
-{
-	return view->loops[loop].celCnt;
-}
-
-void ViewObj::SetPri(int pri)
-{
-	if (pri > 255)
-		pri = 255;
-	if (pri < 0)
-		pri = -1;
-	this->pri = pri;
-}
-
-int ViewObj::GetPri()
-{
-	return pri;
-}
-
-void ViewObj::Initialize()
-{
-	Sol.new_usertype<ViewObj>(
-		"ViewObj",
-		sol::constructors<ViewObj(View*), ViewObj(View*, int, int)>(),
-		"Move", &Move,
-		"loop", sol::property(&GetLoop, &SetLoop),
-		"numLoops", sol::property(&GetNumLoops),
-		"cel", sol::property(&GetCel, &SetCel),
-		"numCels", sol::property(&GetNumCels),
-		"priority", sol::property(&GetPri, &SetPri)
-		);
+	if (loop >= this->loopCnt)
+		loop = this->loopCnt - 1;
+	auto theLoop = this->loops[loop];
+	return theLoop.celCnt;
 }
