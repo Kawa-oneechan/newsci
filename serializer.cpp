@@ -1,5 +1,7 @@
 #include "NewSCI.h"
 
+//TODO: add more types?
+
 FILE* Serializer::out = NULL;
 
 void Serializer::Initialize()

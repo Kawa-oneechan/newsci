@@ -1,9 +1,5 @@
 //#pragma once
 
-//If we used a newer VS, this'd be the /utf-8 switch. But I am Kawa, and I target VS2010.
-#pragma execution_character_set("UTF-8")
-//Bite me.
-
 //For switches on enums, issue a warning if we're missing an option.
 #pragma warning(1:4062)
 

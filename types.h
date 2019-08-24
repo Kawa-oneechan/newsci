@@ -40,9 +40,3 @@ public:
 	void Offset(int x, int y);
 };
 
-struct SavedBits
-{
-	Rect rect;
-	Pixel* pixels;
-};
-

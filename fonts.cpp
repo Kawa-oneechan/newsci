@@ -322,7 +322,6 @@ int Font::TextWidth(Str str, int first, int count)
 	return width;
 }
 
-
 /* SCI FONTS
  * ---------
  * u16	sciMarker	must be 0x0087
@@ -334,9 +333,8 @@ int Font::TextWidth(Str str, int first, int count)
  * Character data:
  * u8	width
  * u8	height
- * u8+	bitmap		(width ÷ 8) × height bytes, 1bpp
+ * u8+	bitmap		(width Ã· 8) Ã— height bytes, 1bpp
  */
-
 
 /* VGA FONT
  * --------
@@ -426,7 +424,7 @@ void VGAFont::MeasureString(std::string text, Rect* rect, int maxWidth)
 int VGAFont::LineHeight() { return 8; }
 int VGAFont::CharCount() { return 128; }
 
-//TODO: add high moby, but we'll want it in 1252 so take some time with Int10's font.
+//TODO: add high moby, but we'll want it in 8859-1 so take some time with Int10's font.
 const unsigned char vgaCharData[] =
 {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7E, 0x81, 0xA5, 0x81, 0xBD, 0x99, 0x81, 0x7E,

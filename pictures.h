@@ -36,6 +36,7 @@ public:
 #define WHITE 0xFFFFFFFF
 #define DKYELLOW 0xFF00AAAA
 #define CORNFLOWER 0xFFED9564
+
 #define ALPHA(C, A) (((A) << 24) | ((C) & 0x00FFFFFF))
 
 #define DrawRect(R) { \
@@ -46,6 +47,7 @@ public:
 	SetPixel(drX, (R)->t, currentPort.fgColor); \
 	SetPixel(drX, (R)->b, currentPort.fgColor); \
 	} } }
+
 #define FillRect(R) { \
 	for (int drY = (R)->t; drY <= (R)->b; drY++) { \
 	for (int drX = (R)->l; drX <= (R)->r; drX++) { \
@@ -75,6 +77,7 @@ inline void SetPixel(int X, int Y, Color C)
 		visualBuffer[place] = (outR) | (outG << 8) | (outB << 16);
 	}
 }
+
 inline void SetPriPixel(int X, int Y, int C, int pri)
 {
 	auto priHere = (int)priorityBuffer[(Y * screenWidth) + X] & 0xFF;

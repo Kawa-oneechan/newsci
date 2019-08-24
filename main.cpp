@@ -65,44 +65,6 @@ void Flush()
 	SDL_RenderPresent(sdlRenderer);
 }
 
-void DoAlert(const char* text)
-{
-	//Handle savedBits;
-	Rect rect;
-	currentPort.font->MeasureString(text, &rect, 160);
-	rect.Inflate(4, 4);
-	rect.Center();
-	//savedBits = Bits::SaveBits(&rect);
-	currentPort.SetPen(WHITE);
-	FillRect(&rect);
-	currentPort.SetPen(BLACK);
-	DrawRect(&rect);
-	rect.Inflate(-4, -4);
-	//currentPort.font->RenderString(text, rect.l, rect.t);
-	currentPort.font->Write(text, &rect, 0);
-
-	SDL_Event ev;
-	while (true)
-	{
-		if (SDL_PollEvent(&ev) == 0)
-			continue;
-		if (ev.type == SDL_KEYUP)
-		{
-			if (ev.key.keysym.sym == SDLK_ESCAPE)
-				break;
-			else if (ev.key.keysym.sym == SDLK_RETURN)
-				//ret = 1;
-				break;
-		}
-		if (ev.type == SDL_MOUSEBUTTONUP)
-			break;
-		SDL_UpdateTexture(sdlTexture, NULL, visualBuffer, screenPitch);
-		SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
-		SDL_RenderPresent(sdlRenderer);
-	}
-	//Bits::RestoreBits(savedBits);
-}
-
 void Message(std::string text, std::string title)
 {
 	if (debugFont == NULL) debugFont = Font::Load("999.fon");
@@ -237,13 +199,6 @@ int main(int argc, char*argv[])
 	sysFont = Font::Load("0.fon");
 	debugFont = Font::Load("999.fon");
 
-	//auto sizedTest = Load("ilira.view");
-	//char* theData = sizedTest->data;
-	//delete sizedTest;
-
-	/* auto ilira = new View("ilira.view"); */
-	//auto ælÉrà = new View("ælÉrà.view");
-
 	mainPort.portRect.t = 0;
 	mainPort.portRect.l = 0;
 	mainPort.portRect.b = screenHeight - 1;
@@ -256,65 +211,9 @@ int main(int argc, char*argv[])
 	Audio::Initialize();
 	View::Initialize();
 
-	//Lua::RunScript("local win = openwindow({8, 18, 128, 40}, \"Test\", 0, true); message(\"bottom text\", \"top text\"); win:close()");
-	//RunScript("message(\"Hello from Lua! Let's put some more text up in this bitch,\\nand a forced newline because why not?\", \"TOP TEXT\") message(\"You did it again, huh?\", \"Oops!\")");
-	//Message("Hello from C++!", "TOP TEXT");
-	//Lua::RunScript(R"(Message("Body text", "Top text");)");
-
-	//Window myWindow(Rect(8,18,128,40), "Test", 1, true);
-	//DoAlert("ælÉrà\n??n?");
-	//DoAlert("line 1\nl?nê 2\nline three");
-	//DoAlert("\1 Sierra");
-	//DoAlert("Ay carumba! You did something we didn't expect.");
-	//Message("You did something that we weren't expecting.\nWhatever it was, you don't need to do it to finish the game.\nTry taking a different approach to the situation.", "Oops!");
-
 	SDL_SetCursor(CreateCursor("pointer.png", 0, 0));
-	//Lua::RunFile("start.lua");
 	Lua::RunFile("engine.lua");
 	Lua::RunScript(R"(OpenScene("test.lua"))");
-
-	/*
-	SDL_Event ev;
-	auto quit = false;
-	while (!quit)
-	{
-		while (SDL_PollEvent(&ev) != 0)
-		{
-			switch (ev.type)
-			{
-			case SDL_QUIT:
-				quit = true;
-				break;
-			case SDL_KEYUP:
-				if (ev.key.keysym.mod & KMOD_CTRL)
-				{
-					if (ev.key.keysym.sym == SDLK_p)
-						shownBuffer = priorityBuffer;
-					else if (ev.key.keysym.sym == SDLK_v)
-						shownBuffer = screenBuffer;
-				}
-				break;
-			}
-		}
-
-		ShowFrame();
-
-		iliraObj.Move(i, 110); //32);
-		auto c = iliraObj.GetCel() + 1;
-		if (c >= iliraObj.GetNumCels())
-			c = 0;
-		iliraObj.SetCel(c);
-		i += 4;
-		if (i >= 340)
-			i = -20;
-
-		SDL_UpdateTexture(sdlTexture, NULL, shownBuffer, 320 * sizeof(Pixel));
-		SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
-		SDL_RenderPresent(sdlRenderer);
-
-		SDL_Delay(60);
-	}
-	*/
 
  	free(visualBuffer);
 	free(priorityBuffer);

@@ -6,7 +6,7 @@
 
 namespace UTF8
 {
-	//Returns the length of a string in characters. That is,"Ren·ta" is 7 bytes in UTF-8 (C3 A1), but 6 in Win-1252 (E1).
+	//Returns the length of a string in characters. That is,"Ren√°ta" is 7 bytes in UTF-8 (C3 A1), but 6 in Win-1252 (E1).
 	int Length(const char* str);
 	
 	//Given a string with at least one full UTF-8 character, returns the codepoint value of the first character and advances the string.
@@ -72,7 +72,7 @@ private:
 	int RenderCharacter(unsigned char c, int x, int y);
 public:
 	VGAFont();
-	VGAFont(std::string filename);
+	VGAFont(std::string filename) {};
 	~VGAFont();
 	void RenderString(std::string text, int x, int y);
 	int MeasureCharacter(unsigned char ch);

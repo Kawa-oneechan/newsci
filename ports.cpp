@@ -56,7 +56,6 @@ void Window::Draw()
 		//oldPort = currentPort;
 		//currentPort = windowManagerPort;
 		currentPort.SetPen(BLACK);
-		//underBits = Bits::SaveBits(&frame);
 		r = Rect(frame);
 
 		if (!(type & 2))
@@ -93,10 +92,11 @@ void Window::Close()
 {
 	if (!visible)
 		return;
-	//Bits::RestoreBits(underBits);
 	visible = false;
 }
 
+//TODO - rework in Sol
+/*
 namespace Windows
 {
 	int CloseWindow(lua_State* L)
@@ -146,3 +146,4 @@ namespace Windows
 		lua_register(L, "openwindow", KOpenWindow);
 	}
 }
+*/
