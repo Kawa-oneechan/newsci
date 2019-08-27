@@ -11,6 +11,23 @@ Initialize = function()
 	otherIli.loop = 8
 	otherIli.cel = 7
 	iliX = -64
+	
+	myWindow = {
+		visible = true,
+		title = "hello?",
+		shadow = true,
+		box = { 8, 8, 142, 48 },
+		controls = {
+			{
+				type = 1, -- DText
+				text = "Testing...",
+				color = 0x0000FF
+			}
+		},
+		
+		Draw = function() DrawWindow(myWindow) end --this would be abstracted away in a class I guess
+	}
+	table.insert(cast, myWindow)
 
 	backgroundMusic = Audio.new("pq2.ogg")
 	backgroundMusic:Play()

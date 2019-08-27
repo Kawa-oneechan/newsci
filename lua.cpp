@@ -87,6 +87,7 @@ void Lua::Initialize()
 	//Sol.set_function("OldShowFrame", OldShowFrame);
 	Sol.set_function("Display", Display);
 	Sol.set_function("ShowScreen", [](int screenID) { shownBuffer = (screenID == 0) ? visualBuffer : priorityBuffer; });
+	Sol.set_function("DrawWindow", DrawWindow);
 }
 
 void Lua::RunScript(std::string script)

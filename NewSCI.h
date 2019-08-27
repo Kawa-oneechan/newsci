@@ -23,3 +23,5 @@
 #include "pictures.h"
 #include "views.h"
 #include "audio.h"
+#include "controls.h"
+

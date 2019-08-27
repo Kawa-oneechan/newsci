@@ -18,6 +18,7 @@ public:
 	Port();
 	void SetPen(Color color);
 	void SetFont(Font* fontHnd);
+	void SetFont(int fontNum);
 };
 
 struct Window

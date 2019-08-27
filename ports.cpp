@@ -25,6 +25,15 @@ void Port::SetFont(Font* fontHnd)
 	fontSize = font->LineHeight();
 }
 
+void Port::SetFont(int fontNum)
+{
+	//TODO: use a lookup of sorts.
+	if (fontNum == 0)
+		SetFont(sysFont);
+	else if (fontNum == 1)
+		SetFont(debugFont);
+}
+
 Window::Window(Rect theFrame, std::string theTitle, int theType, int vis)
 {
 	frame = theFrame;
