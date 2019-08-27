@@ -1,6 +1,8 @@
 #include "NewSCI.h"
+#include "support/fmt/format.h"
 
 Port mainPort, currentPort;
+std::map<int, Font*> fonts;
 
 Port::Port()
 {
@@ -27,11 +29,22 @@ void Port::SetFont(Font* fontHnd)
 
 void Port::SetFont(int fontNum)
 {
-	//TODO: use a lookup of sorts.
-	if (fontNum == 0)
-		SetFont(sysFont);
-	else if (fontNum == 1)
-		SetFont(debugFont);
+	try
+	{
+		auto f = fonts.at(fontNum);
+		SetFont(f);
+	}
+	catch (std::out_of_range) //Wasn't there. Try loading it.
+	{		
+		Font* f = Font::Load(fmt::format("{0}.fon", fontNum));
+		if (f)
+		{
+			fonts[fontNum] = f;
+			SetFont(f);
+		}
+		else
+			SetFont(sysFont);
+	}
 }
 
 Window::Window(Rect theFrame, std::string theTitle, int theType, int vis)
