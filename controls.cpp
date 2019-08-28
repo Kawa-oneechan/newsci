@@ -29,15 +29,17 @@ bool DrawWindowButtonControl(sol::table controlDef, int leftOffset = 0, int topO
 	auto left = controlDef["left"].get_or(0) + leftOffset;
 	auto top = controlDef["top"].get_or(0) + topOffset;
 	auto width = controlDef["width"].get_or(0);
-	auto height = controlDef["height"].get_or(12);
+	currentPort.SetFont(controlDef["font"].get_or(0));
+	auto height = controlDef["height"].get_or(currentPort.fontSize + 4);
 	if (width == 0) width = maxWidth;
 	if (width == 0) width = screenWidth - left;
 	auto r = Rect(left, top, left + width, top + height);
 	auto text = controlDef["text"].get<std::string>();
 	//TODO: recognize presence of function UserDraw and call that instead.
-	currentPort.SetFont(controlDef["font"].get_or(1));
 	currentPort.SetPen(controlDef["color"].get_or(0) | 0xFF000000);
+	r.Inflate(-1, -3);
 	currentPort.font->Write(text, &r, 1);
+	r.Inflate(1, 3);
 	currentPort.SetPen(controlDef["border"].get_or(0) | 0xFF000000);
 	DrawRect(&r);
 	
@@ -55,13 +57,17 @@ bool DrawWindowButtonControl(sol::table controlDef, int leftOffset = 0, int topO
 		if (mouseB == 1)
 		{
 			controlDef["debounce"] = true;
-			//InvertRect(&r);
+			InvertRect(&r);
 		}
 		else if (controlDef["debounce"].get_or(false))
 		{
 			controlDef["debounce"] = false;
 			return false;
 		}
+	}
+	else if (mouseB == 1)
+	{
+		controlDef["debounce"] = false;
 	}
 	return true;
 }
@@ -102,7 +108,7 @@ void DrawWindow(sol::table windowDef)
 		currentPort.SetFont(sysFont);
 		currentPort.font->Write(title, &r, 1);
 		currentPort.SetPen(BLACK);
-		topOffset += 10;
+		topOffset += 12;
 	}
 
 	//Now draw the controls.

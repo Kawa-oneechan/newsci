@@ -54,6 +54,14 @@ public:
 	SetPixel(drX, drY, currentPort.fgColor); \
 	} } }
 
+#define InvertRect(R) { \
+	for (int drY = (R)->t; drY <= (R)->b; drY++) { \
+	for (int drX = (R)->l; drX <= (R)->r; drX++) { \
+	int drP = ((drY) * screenWidth) + (drX); \
+	int drC = visualBuffer[drP] & 0xFFFFFF; \
+	visualBuffer[drP] = (~drC) | 0xFF000000; \
+	} } }
+
 inline void SetPixel(int X, int Y, Color C)
 {
 	if ((C) >> 24 == 0)
