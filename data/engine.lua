@@ -5,6 +5,7 @@ delay = 50
 cast = {}
 events = {}
 backgroundMusic = nil
+modalDialog = false
 
 currentSceneFile = ""
 currentScene = {
@@ -35,6 +36,7 @@ end
 function Animate(theCast)
 	theCast = theCast or cast
 	for k, v in pairs(theCast) do
+		v:Update()
 		v:Draw()
 	end
 end
@@ -97,6 +99,9 @@ function table.removeByVal(t, e)
 end
 
 -- ----------------------------------------------- --
+-- VIEW STUFF
+-- ----------------------------------------------- --
+
 
 dofile("class.lua")
 
@@ -108,12 +113,20 @@ ViewObj.new = class(function(v, theView, theX, theY)
 	v.pri = v.y
 	v.loop = 0
 	v.cel = 0
+	v.looper = nil
+	v.cycler = nil
 	v.Draw = vobDraw
+	v.Update = vobUpdate
 	v.Move = vobMove
 end)
 
 function vobDraw(v)
 	v.view:Draw(v.loop, v.cel, v.x, v.y, v.pri, false)
+end
+
+function vobUpdate(v)
+	if v.looper then v.looper(v) end
+	if v.cycler then v.cycler(v) end
 end
 
 function vobMove(v, theX, theY)
@@ -122,4 +135,20 @@ function vobMove(v, theX, theY)
 	if v.pri ~= -1 then
 		v.pri = v.y
 	end
+end
+
+-- ----------------------------------------------- --
+-- LOOPERS AND CYCLERS for views
+-- ----------------------------------------------- --
+
+function CycleForward(v)
+	local cel = v.cel + 1
+	if cel == v.view:GetNumCels(v.loop) then cel = 0 end
+	v.cel = cel
+end
+
+function CycleBackward(v)
+	local cel = v.cel
+	if cel == 0 then cel = v.view:GetNumCels(v.loop) end
+	v.cel = cel - 1
 end

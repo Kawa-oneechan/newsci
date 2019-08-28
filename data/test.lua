@@ -8,6 +8,7 @@ Initialize = function()
 	table.insert(cast, iliraObject)
 	table.insert(cast, otherIli)
 
+	iliraObject.cycler = CycleForward
 	otherIli.loop = 8
 	otherIli.cel = 7
 	iliX = -64
@@ -53,7 +54,8 @@ Initialize = function()
 			}
 		},
 		
-		Draw = function() DrawWindow(myWindow) end --this would be abstracted away in a class I guess
+		Draw = function() DrawWindow(myWindow) end, --this would be abstracted away in a class I guess
+		Update = function() end -- does nothing lol
 	}
 	table.insert(cast, myWindow)
 
@@ -73,10 +75,6 @@ Tick = function()
 	end
 
 	iliraObject:Move(iliX, 148)
-	local cel = iliraObject.cel + 1
-	-- if cel == iliraObject.numCels then cel = 0 end
-	if cel == iliraObject.view:GetNumCels(iliraObject.loop) then cel = 0 end
-	iliraObject.cel = cel
 		
 	for k, v in pairs(events) do
 		if not v.handled then
