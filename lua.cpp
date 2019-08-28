@@ -10,6 +10,49 @@ extern Pixels shownBuffer, visualBackground, priorityBackground, visualBuffer, p
 sol::state Sol;
 
 extern int windowWidth, windowHeight;
+
+//To go from SDL scans to regular ol' BIOS scans
+int keytranslation[] = {
+	0, 0, 0, 0, 0, 0, 0, 0, 14, 15, 0, 0, 0, 28, 0, 0, 0, 0, 0, 89, 0, 0, 0,
+	0, 0, 0, 0, 1, 0, 0, 0, 0, 57, 2, 40, 4, 5, 6, 8, 40, 10, 11, 9, 13, 51,
+	12, 52, 53, 11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 39, 39, 51, 13, 52, 53, 3, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	26, 43, 27, 7, 12, 41, 30, 48, 46, 32, 18, 33, 34, 35, 23, 36, 37, 38, 50,
+	49, 24, 25, 16, 19, 31, 20, 22, 47, 17, 45, 21, 44, 0, 0, 0, 0, 211, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 82, 79, 80, 81, 75, 76, 77, 71, 72, 73, 83, 181, 55, 74, 78, 156, 0,
+	200, 208, 205, 203, 210, 199, 207, 201, 209, 59, 60, 61, 62, 63, 64, 65,
+	66, 67, 68, 87, 88, 0, 0, 0, 0, 0, 0, 69, 58, 70, 54, 42, 157, 29, 184, 56,
+	0, 0, 219, 220, 0, 0, 0, /*-2*/0, 84, 183, 221, 0, 0, 0
+};
+
+//To go from BIOS scans to characters.
+//TODO: load from file.
+char scan2ascii[] =
+{
+	0,0,'1','2','3','4','5','6','7','8','9','0','-','=',0,0,
+	'q','w','e','r','t','y','u','i','o','p','[',']',0,0,'a','s',
+	'd','f','g','h','j','k','l',';',39,'`',0,92,'z','x','c','v',
+	'b','n','m',',','.','/',0,'*',0,32,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,'7','8','9','-','4','5','6','+','1',
+	'2','3','0','.',0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+
+	0,0,'!','@','#','$','%','^','&','*','(',')','_','+',0,0,
+	'Q','W','E','R','T','Y','U','I','O','P','{','}',0,0,'A','S',
+	'D','F','G','H','J','K','L',':',34,'~',0,'|','Z','X','C','V',
+	'B','N','M','<','>','?',0,'*',0,32,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,'7','8','9','-','4','5','6','+','1',
+	'2','3','0','.',0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+};
+
 #ifdef SHADERS
 extern Pixels windowBuffer;
 extern void ApplyShader(Pixels sourceBuffer);
@@ -56,13 +99,18 @@ void HandleEvents()
 			break;
 		case SDL_KEYDOWN:
 		case SDL_KEYUP:
-			Lua::RunScript(fmt::format("table.insert(events, {{ type = {}, sym = \"{}\", mod = {}, scan = {}, shift = {}, ctrl = {}, alt = {}, rawsym = {} }})", (ev.type == SDL_KEYDOWN) ? 16 : 17,
+			int code = keytranslation[ev.key.keysym.sym] + ((ev.key.keysym.mod & KMOD_SHIFT) ? 128 : 0);
+			code = scan2ascii[code];
+			Lua::RunScript(fmt::format("table.insert(events, {{ type = {}, sym = \"{}\", mod = {}, scan = {}, shift = {}, ctrl = {}, alt = {}, rawsym = {}, char = {} }})",
+				(ev.type == SDL_KEYDOWN) ? 16 : 17,
 				SDL_GetKeyName(ev.key.keysym.sym),
-				ev.key.keysym.mod & ~KMOD_NUM, ev.key.keysym.scancode,
+				ev.key.keysym.mod & ~KMOD_NUM,
+				ev.key.keysym.scancode,
 				(ev.key.keysym.mod & KMOD_SHIFT) ? "true" : "false",
 				(ev.key.keysym.mod & KMOD_CTRL) ? "true" : "false",
 				(ev.key.keysym.mod & KMOD_ALT) ? "true" : "false",
-				ev.key.keysym.sym));
+				ev.key.keysym.sym,
+				code));
 			break;
 		}
 	}

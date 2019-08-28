@@ -122,6 +122,7 @@ bool DrawWindowInputControl(sol::table controlDef, int leftOffset = 0, int topOf
 			auto scan = (SDL_Scancode)evt["scan"].get<int>();
 			auto sym = evt["sym"].get<std::string>();
 			auto rawsym = (SDL_Keycode)evt["rawsym"].get<int>();
+			auto c = evt["char"].get<int>();
 			if (rawsym == SDLK_LEFT && caretPos > 0)
 			{
 				caretPos--;
@@ -144,13 +145,13 @@ bool DrawWindowInputControl(sol::table controlDef, int leftOffset = 0, int topOf
 				text = text.substr(0, caretPos) + text.substr(caretPos + 1, text.length() - caretPos - 1);
 				controlDef.set("text", text);
 			}
-			else if (rawsym < 256)
+			else if (c > 0 && c < 256)
 			{
-				auto c = (char)rawsym;
-				//TODO: do better, perhaps with a custom LUT, probably loaded from file.
-				if (c > ' ' && evt["shift"].get<bool>())
-					c -= 0x20;
-				text = text.substr(0, caretPos) + c + text.substr(caretPos, text.length() - caretPos);
+				/* if (event->key.keysym.scancode != SDL_GetScancodeFromKey(event->key.keysym.sym))
+					printf("Physical %s key acting as %s key",
+						SDL_GetScancodeName(event->key.keysym.scancode),
+						SDL_GetKeyName(event->key.keysym.sym)); */
+				text = text.substr(0, caretPos) + (char)c + text.substr(caretPos, text.length() - caretPos);
 				caretPos++;
 				controlDef.set("caret", caretPos);
 				controlDef.set("text", text);
