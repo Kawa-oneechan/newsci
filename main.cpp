@@ -13,6 +13,7 @@ Pixels shownBuffer;
 Pixels windowBuffer;
 #endif
 extern Pixels visualBackground, priorityBackground;
+extern bool soundEnabled;
 
 SizedHandle* SizedLoad(const char* file)
 {
@@ -154,6 +155,8 @@ int main(int argc, char*argv[])
 		if (!_strcmpi(c, "single")) cursorMode = 0;
 		else if (!_strcmpi(c, "double")) cursorMode = 1;
 		else cursorMode = 2;
+		c = ini->Get("Sound", "enabled", "true");
+		soundEnabled = (!_strcmpi(c, "true"));
 	}
 
 	Pack::Load();

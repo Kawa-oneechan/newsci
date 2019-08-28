@@ -16,7 +16,7 @@ Initialize = function()
 		visible = true,
 		title = "hello?",
 		shadow = true,
-		box = { 8, 8, 142, 58 },
+		box = { 8, 8, 142, 72 },
 		controls = {
 			{
 				type = 1, -- DText
@@ -44,6 +44,12 @@ Initialize = function()
 					myWindow.visible = false
 					table.removeByVal(cast, myWindow)
 				end
+			},
+			{
+				type = 3, --DText
+				text = "lol",
+				top = 32,
+				width = 128
 			}
 		},
 		

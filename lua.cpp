@@ -56,12 +56,13 @@ void HandleEvents()
 			break;
 		case SDL_KEYDOWN:
 		case SDL_KEYUP:
-			Lua::RunScript(fmt::format("table.insert(events, {{ type = {}, sym = \"{}\", mod = {}, scan = {}, shift = {}, ctrl = {}, alt = {} }})", (ev.type == SDL_KEYDOWN) ? 16 : 17,
+			Lua::RunScript(fmt::format("table.insert(events, {{ type = {}, sym = \"{}\", mod = {}, scan = {}, shift = {}, ctrl = {}, alt = {}, rawsym = {} }})", (ev.type == SDL_KEYDOWN) ? 16 : 17,
 				SDL_GetKeyName(ev.key.keysym.sym),
 				ev.key.keysym.mod & ~KMOD_NUM, ev.key.keysym.scancode,
 				(ev.key.keysym.mod & KMOD_SHIFT) ? "true" : "false",
 				(ev.key.keysym.mod & KMOD_CTRL) ? "true" : "false",
-				(ev.key.keysym.mod & KMOD_ALT) ? "true" : "false"));
+				(ev.key.keysym.mod & KMOD_ALT) ? "true" : "false",
+				ev.key.keysym.sym));
 			break;
 		}
 	}

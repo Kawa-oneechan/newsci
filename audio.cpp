@@ -3,11 +3,15 @@
 
 FMOD::System* Audio::system;
 std::vector<Audio*> Audio::playing;
+bool soundEnabled;
 
 void Audio::Initialize()
 {
-	auto r = FMOD::System_Create(&system);
-	r = system->init(4, FMOD_INIT_NORMAL, NULL);
+	if (soundEnabled)
+	{
+		auto r = FMOD::System_Create(&system);
+		r = system->init(4, FMOD_INIT_NORMAL, NULL);
+	}
 	Sol.new_usertype<Audio>(
 		"Audio",
 		sol::constructors<Audio(std::string)>(),
@@ -35,10 +39,15 @@ Audio::Audio(std::string filename)
 	this->theChannel = NULL;
 	this->status = -1;
 	unsigned long size = 0;
+	this->filename = std::string(filename);
+	if (!soundEnabled)
+	{
+		this->status = 0;
+		return;
+	}
 	Handle data = LoadFile(filename, &size);
 	if (!data)
 		throw "Could not load file.";
-	this->filename = std::string(filename);
 	auto soundEx = FMOD_CREATESOUNDEXINFO();
 	memset(&soundEx, 0, sizeof(FMOD_CREATESOUNDEXINFO));
 	soundEx.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
@@ -67,7 +76,8 @@ Audio::Audio(std::string filename)
 Audio::~Audio()
 {
 	this->Stop();
-	this->theSound->release();
+	if (soundEnabled)
+		this->theSound->release();
 	this->theChannel = NULL;
 	this->theSound = NULL;
 }
@@ -76,9 +86,12 @@ void Audio::Play()
 {
 	if (this->status == 0)
 	{
-		auto r = system->playSound(FMOD_CHANNEL_FREE, this->theSound, false, &this->theChannel);
-		if (r != FMOD_OK)
-			throw "Could not play stream.";
+		if (soundEnabled)
+		{
+			auto r = system->playSound(FMOD_CHANNEL_FREE, this->theSound, false, &this->theChannel);
+			if (r != FMOD_OK)
+				throw "Could not play stream.";
+		}
 		Audio::playing.push_back(this);
 	}
 	else if (this->status == 2)
@@ -90,7 +103,8 @@ void Audio::Play()
 
 void Audio::Pause()
 {
-	this->theChannel->setPaused(true);
+	if (soundEnabled)
+		this->theChannel->setPaused(true);
 	this->status = 2;
 }
 
@@ -98,7 +112,8 @@ void Audio::Stop()
 {
 	if (this->status != 0)
 	{
-		this->theChannel->stop();
+		if (soundEnabled)
+			this->theChannel->stop();
 	}
 	this->status = 0;
 	Audio::playing.erase(std::remove(Audio::playing.begin(), Audio::playing.end(), this), Audio::playing.end());
@@ -107,7 +122,8 @@ void Audio::Stop()
 void Audio::Serialize()
 {
 	unsigned int pos = 0;
-	this->theChannel->getPosition(&pos, FMOD_TIMEUNIT_PCM);
+	if (soundEnabled)
+		this->theChannel->getPosition(&pos, FMOD_TIMEUNIT_PCM);
 	Serializer::SetInteger(this->status);
 	Serializer::SetInteger(pos);
 }
@@ -128,6 +144,6 @@ void Audio::Deserialize()
 		this->Play();
 		this->Pause();
 	}
-	if (status)
+	if (status && soundEnabled)
 		this->theChannel->setPosition(pos, FMOD_TIMEUNIT_PCM);
 }

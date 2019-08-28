@@ -72,6 +72,97 @@ bool DrawWindowButtonControl(sol::table controlDef, int leftOffset = 0, int topO
 	return true;
 }
 
+bool DrawWindowInputControl(sol::table controlDef, int leftOffset = 0, int topOffset = 0, int maxWidth = 0)
+{
+	auto left = controlDef["left"].get_or(0) + leftOffset;
+	auto top = controlDef["top"].get_or(0) + topOffset;
+	auto width = controlDef["width"].get_or(0);
+	currentPort.SetFont(controlDef["font"].get_or(0));
+	auto height = controlDef["height"].get_or(currentPort.fontSize + 4);
+	if (width == 0) width = maxWidth;
+	if (width == 0) width = screenWidth - left;
+	auto r = Rect(left, top, left + width, top + height);
+	auto text = controlDef["text"].get<std::string>();
+	auto caretPos = controlDef["caret"].get<int>();
+
+	auto mouseDivX = windowWidth / screenWidth;
+	auto mouseDivY = windowHeight / screenHeight;
+	auto mouseX = 0;
+	auto mouseY = 0;
+	auto mouseB = SDL_GetMouseState(&mouseX, &mouseY);
+	mouseX /= mouseDivX;
+	mouseY /= mouseDivY;
+	auto inside = (mouseX >= r.l && mouseX <= r.r && mouseY >= r.t && mouseY <= r.b);
+
+	currentPort.SetPen(controlDef["color"].get_or(0) | 0xFF000000);
+	r.Inflate(-1, -3);
+	currentPort.font->Write(text, &r, 0);
+	r.Inflate(1, 3);
+	currentPort.SetPen(inside ? (controlDef["border"].get_or(0) | 0xFF000000) : LTGRAY);
+	DrawRect(&r);
+
+	if (inside)
+	{
+		auto upToCaret = text.substr(0, caretPos);
+		Rect caretRect;
+		currentPort.font->MeasureString(upToCaret, &caretRect, width);
+		caretRect.Offset(left, top);
+		caretRect.l = caretRect.r + 1;
+		caretRect.r = caretRect.l + 1;
+		caretRect.t++;
+		caretRect.b = caretRect.t + height - 2;
+		InvertRect(&caretRect);
+
+		auto events = Sol["events"].get<sol::table>();
+		for (auto ev : events)
+		{
+			auto evt = ev.second.as<sol::table>();
+			if (evt["type"].get<int>() != 17)
+				continue;
+			auto scan = (SDL_Scancode)evt["scan"].get<int>();
+			auto sym = evt["sym"].get<std::string>();
+			auto rawsym = (SDL_Keycode)evt["rawsym"].get<int>();
+			if (rawsym == SDLK_LEFT && caretPos > 0)
+			{
+				caretPos--;
+				controlDef.set("caret", caretPos);
+			}
+			else if (rawsym == SDLK_RIGHT && caretPos < text.length())
+			{
+				caretPos++;
+				controlDef.set("caret", caretPos);
+			}
+			else if (rawsym == SDLK_BACKSPACE && caretPos > 0 && text.length() > 0)
+			{
+				caretPos--;
+				text = text.substr(0, caretPos);
+				controlDef.set("caret", caretPos);
+				controlDef.set("text", text);
+			}
+			else if (rawsym == SDLK_DELETE && caretPos < text.length() && text.length() > 0)
+			{
+				text = text.substr(0, caretPos) + text.substr(caretPos + 1, text.length() - caretPos - 1);
+				controlDef.set("text", text);
+			}
+			else if (rawsym < 256)
+			{
+				auto c = (char)rawsym;
+				//TODO: do better, perhaps with a custom LUT, probably loaded from file.
+				if (c > ' ' && evt["shift"].get<bool>())
+					c -= 0x20;
+				text = text.substr(0, caretPos) + c + text.substr(caretPos, text.length() - caretPos);
+				caretPos++;
+				controlDef.set("caret", caretPos);
+				controlDef.set("text", text);
+			}
+			evt["handled"] = true;
+			break;
+		}
+	}
+
+	return true;
+}
+
 void DrawWindow(sol::table windowDef)
 {
 	auto visible = windowDef["visible"].get<bool>();
@@ -123,6 +214,7 @@ void DrawWindow(sol::table windowDef)
 		{
 			case 1: cont = DrawWindowTextControl(c, leftOffset, topOffset, width); break;
 			case 2: cont = DrawWindowButtonControl(c, leftOffset, topOffset, width); break;
+			case 3: cont = DrawWindowInputControl(c, leftOffset, topOffset, width); break;
 			default: SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Unsupported window control type %d.", type); break;
 		}
 		if (!cont)
