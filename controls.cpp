@@ -1,6 +1,8 @@
 #include "NewSCI.h"
 
-void DrawWindowTextControl(sol::table controlDef, int leftOffset = 0, int topOffset = 0, int maxWidth = 0)
+extern int windowWidth, windowHeight;
+
+bool DrawWindowTextControl(sol::table controlDef, int leftOffset = 0, int topOffset = 0, int maxWidth = 0)
 {
 	//auto visible = controlDef["visible"].get<bool>();
 	//if (!visible)
@@ -16,6 +18,52 @@ void DrawWindowTextControl(sol::table controlDef, int leftOffset = 0, int topOff
 	currentPort.SetFont(controlDef["font"].get_or(1));
 	currentPort.SetPen(controlDef["color"].get_or(0) | 0xFF000000);
 	currentPort.font->Write(text, &r, mode);
+	return true;
+}
+
+bool DrawWindowButtonControl(sol::table controlDef, int leftOffset = 0, int topOffset = 0, int maxWidth = 0)
+{
+	//auto visible = controlDef["visible"].get<bool>();
+	//if (!visible)
+	//	return;
+	auto left = controlDef["left"].get_or(0) + leftOffset;
+	auto top = controlDef["top"].get_or(0) + topOffset;
+	auto width = controlDef["width"].get_or(0);
+	auto height = controlDef["height"].get_or(12);
+	if (width == 0) width = maxWidth;
+	if (width == 0) width = screenWidth - left;
+	auto r = Rect(left, top, left + width, top + height);
+	auto text = controlDef["text"].get<std::string>();
+	//TODO: recognize presence of function UserDraw and call that instead.
+	currentPort.SetFont(controlDef["font"].get_or(1));
+	currentPort.SetPen(controlDef["color"].get_or(0) | 0xFF000000);
+	currentPort.font->Write(text, &r, 1);
+	currentPort.SetPen(controlDef["border"].get_or(0) | 0xFF000000);
+	DrawRect(&r);
+	
+	auto mouseDivX = windowWidth / screenWidth;
+	auto mouseDivY = windowHeight / screenHeight;
+	auto mouseX = 0;
+	auto mouseY = 0;
+	auto mouseB = SDL_GetMouseState(&mouseX, &mouseY);
+	mouseX /= mouseDivX;
+	mouseY /= mouseDivY;
+	if (mouseX >= r.l && mouseX <= r.r && mouseY >= r.t && mouseY <= r.b)
+	{
+		r.Inflate(-1, -1);
+		DrawRect(&r);
+		if (mouseB == 1)
+		{
+			controlDef["debounce"] = true;
+			//InvertRect(&r);
+		}
+		else if (controlDef["debounce"].get_or(false))
+		{
+			controlDef["debounce"] = false;
+			return false;
+		}
+	}
+	return true;
 }
 
 void DrawWindow(sol::table windowDef)
@@ -59,14 +107,25 @@ void DrawWindow(sol::table windowDef)
 
 	//Now draw the controls.
 	auto controls = windowDef["controls"].get<sol::table>();
+	sol::table clicked;
 	for(auto control : controls)
 	{
 		auto c = control.second.as<sol::table>();
 		auto type = c["type"].get<int>();
+		auto cont = true;
 		switch (type)
 		{
-			case 1: DrawWindowTextControl(c, leftOffset, topOffset, width); break;
+			case 1: cont = DrawWindowTextControl(c, leftOffset, topOffset, width); break;
+			case 2: cont = DrawWindowButtonControl(c, leftOffset, topOffset, width); break;
 			default: SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Unsupported window control type %d.", type); break;
 		}
+		if (!cont)
+			clicked = c;
+	}
+	if (clicked)
+	{
+		auto maybeClick = clicked["Click"].get<sol::function>();
+		if (maybeClick)
+			maybeClick();
 	}
 }

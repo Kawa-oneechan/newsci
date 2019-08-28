@@ -87,6 +87,17 @@ end
 
 -- ----------------------------------------------- --
 
+function table.removeByVal(t, e)
+	for i, v in pairs(t) do
+		if v == e then
+			table.remove(t, i)
+			return
+		end
+	end
+end
+
+-- ----------------------------------------------- --
+
 dofile("class.lua")
 
 ViewObj = {}

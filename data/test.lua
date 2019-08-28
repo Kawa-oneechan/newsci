@@ -16,12 +16,34 @@ Initialize = function()
 		visible = true,
 		title = "hello?",
 		shadow = true,
-		box = { 8, 8, 142, 48 },
+		box = { 8, 8, 142, 58 },
 		controls = {
 			{
 				type = 1, -- DText
 				text = "Testing...",
 				color = 0x0000FF
+			},
+			{
+				type = 2, -- DButton
+				text = "black",
+				top = 16,
+				width = 42,
+				Click = function()
+					events = {}
+					myWindow.controls[1].color = 0
+				end
+			},
+			{
+				type = 2, -- DButton
+				text = "close",
+				left = 68,
+				top = 16,
+				width = 42,
+				Click = function()
+					events = {}
+					myWindow.visible = false
+					table.removeByVal(cast, myWindow)
+				end
 			}
 		},
 		
@@ -49,7 +71,7 @@ Tick = function()
 	-- if cel == iliraObject.numCels then cel = 0 end
 	if cel == iliraObject.view:GetNumCels(iliraObject.loop) then cel = 0 end
 	iliraObject.cel = cel
-	
+		
 	for k, v in pairs(events) do
 		if not v.handled then
 			if v.type == 3 then -- mouse click
