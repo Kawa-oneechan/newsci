@@ -14,7 +14,9 @@ Pixels windowBuffer;
 #endif
 extern Pixels visualBackground, priorityBackground;
 extern bool soundEnabled;
+extern char scan2ascii[];
 
+/*
 SizedHandle* SizedLoad(const char* file)
 {
 	FILE* fd;
@@ -28,6 +30,7 @@ SizedHandle* SizedLoad(const char* file)
 	fclose(fd);
 	return ret;
 }
+*/
 
 #ifdef SHADERS
 void ApplyShader(Pixels sourceBuffer)
@@ -144,6 +147,8 @@ int _tmain(int argc, _TCHAR* argv[])
 int main(int argc, char*argv[])
 {
 #endif
+	std::string keymapFile;
+
 	{
 		auto ini = new IniFile();
 		ini->Load("resource.ini");
@@ -157,9 +162,26 @@ int main(int argc, char*argv[])
 		else cursorMode = 2;
 		c = ini->Get("Sound", "enabled", "true");
 		soundEnabled = (!_strcmpi(c, "true"));
+		c = ini->Get("Input", "keymap", "american");
+		keymapFile = c;
 	}
 
 	Pack::Load();
+
+	if (keymapFile != "american")
+	{
+		keymapFile += ".key";
+		auto size = 0UL;
+		auto ret = LoadFile(keymapFile.c_str(), &size);
+		if (ret != NULL && size == 256)
+		{
+			SDL_LogInfo(SDL_LOG_CATEGORY_INPUT, "Using keymap %s.", keymapFile.c_str());
+			memcpy(scan2ascii, ret, 256);
+		}
+		else
+			SDL_LogInfo(SDL_LOG_CATEGORY_INPUT, "Invalid keymap file.");
+		free(ret);
+	}
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		return 0;
