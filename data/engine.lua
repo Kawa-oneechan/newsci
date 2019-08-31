@@ -118,6 +118,7 @@ ViewObj.new = class(function(v, theView, theX, theY)
 	v.Draw = vobDraw
 	v.Update = vobUpdate
 	v.Move = vobMove
+	v.SetHeading = vobSetHeading
 end)
 
 function vobDraw(v)
@@ -125,8 +126,8 @@ function vobDraw(v)
 end
 
 function vobUpdate(v)
-	if v.looper then v.looper(v) end
-	if v.cycler then v.cycler(v) end
+--	if v.looper then v:looper() end
+	if v.cycler then v:cycler() end
 end
 
 function vobMove(v, theX, theY)
@@ -137,9 +138,21 @@ function vobMove(v, theX, theY)
 	end
 end
 
+function vobSetHeading(v, heading)
+	if v.looper then v:looper(heading)
+	else DirLoop(v, heading) end
+end
+
 -- ----------------------------------------------- --
 -- LOOPERS AND CYCLERS for views
 -- ----------------------------------------------- --
+
+function LooperLook(v)
+	-- given a v.target, sets view to match angle hopefully
+	-- requires a non-nil v.target and loop to be 8
+	if v.target == nil then return end
+	
+end
 
 function CycleForward(v)
 	local cel = v.cel + 1
@@ -151,4 +164,32 @@ function CycleBackward(v)
 	local cel = v.cel
 	if cel == 0 then cel = v.view:GetNumCels(v.loop) end
 	v.cel = cel - 1
+end
+
+-- ----------------------------------------------- --
+
+function DirLoop(v, angle)
+	local numLoops = v.view:GetNumCels(v.loop)
+	local loop = 0
+	if (angle > 315) or (angle < 45) then
+		if numLoops >= 4 then loop = 3 else loop = -1 end
+	elseif (angle > 135) and (angle < 225) then
+		if numLoops >= 4 then loop = 2 else loop = -1 end
+	elseif (angle < 180) then
+		loop = 0
+	else
+		loop = 1
+	end
+	
+	if loop ~= -1 then
+		v.loop = loop
+	end
+end
+
+
+function GetAngle(x1, y1, x2, y2)
+	-- local angle = math.atan(y2 - y1, x2 - x1) * 180 / math.pi;
+	local angle = ATan(y2, x1, y1, x2)
+	print ("GetAngle(" .. x1 .. ", " .. y1 .. ", " .. x2 .. ", " .. y2 .. ") => " .. angle .. "\n")
+	return angle;
 end

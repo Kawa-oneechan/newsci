@@ -124,10 +124,76 @@ void Display(std::string text, int x, int y)
 	currentPort.font->Write(text, &rect, 0);
 }
 
+
+// This part shamelessly stolen from SCI11
+
+#define TrigScale 10000L
+static long ATanArray[] =
+{
+	875, 1763, 2679, 3640, 4663, 5774, 7002, 8391, 10000
+};
+
+static int ATanProrate(long index)
+{
+	int i = 0;
+	while (ATanArray[i] < index) ++i;
+	return ((5 * i) + (int)(((5L * (index - ATanArray[i - 1])) + ((ATanArray[i] - ATanArray[i - 1]) / 2)) / (ATanArray[i] - ATanArray[i - 1])));
+}
+
+static int ATanGetMajor(int x1, int y1, int x2, int y2)
+{
+	long deltaX, deltaY, index;
+	int major;
+
+	deltaX = (long)(abs(x2 - x1));
+	deltaY = (long)(abs(y2 - y1));
+
+	if ((deltaX == 0) && (deltaY == 0))
+		return(0);
+
+	if (deltaY <= deltaX)
+	{
+		index = ((TrigScale * deltaY) / deltaX);
+		if (index < 1000L)
+			major = (int)((57L * deltaY + (deltaX / 2L)) / deltaX);
+		else
+			major = ATanProrate(index);
+	}
+	else
+		major = 90 - ATanGetMajor(y1, x1, y2, x2);
+
+	return(major);
+}
+
+int ATan(int x1, int y1, int x2, int y2)
+{
+	int major;
+	major = ATanGetMajor(x1, y1, x2, y2);
+	if (x2 < x1)
+	{
+		if (y2 <= y1)
+			major += 180;
+		else
+			major = 180 - major;
+	}
+	else
+	{
+		if (y2 < y1)
+			major = 360 - major;
+		if (major == 360)
+			major = 0;
+	}
+	return(major);
+}
+
+// End stolen goods
+
+
 void Lua::Initialize()
 {
-	Sol.open_libraries(sol::lib::base, sol::lib::table);
+	Sol.open_libraries(sol::lib::base, sol::lib::table, sol::lib::math);
 	Sol.set_function("dofile", RunFile);
+	Sol.set_function("print", printf);
 	Sol.set_function("Message", Message);
 	Sol.set_function("Delay", SDL_Delay);
 	Sol.set_function("PrepareFrame", PrepareFrame);
@@ -137,6 +203,7 @@ void Lua::Initialize()
 	Sol.set_function("Display", Display);
 	Sol.set_function("ShowScreen", [](int screenID) { shownBuffer = (screenID == 0) ? visualBuffer : priorityBuffer; });
 	Sol.set_function("DrawWindow", DrawWindow);
+	Sol.set_function("ATan", ATan);
 }
 
 void Lua::RunScript(std::string script)

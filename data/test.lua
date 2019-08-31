@@ -11,6 +11,8 @@ Initialize = function()
 	iliraObject.cycler = CycleForward
 	otherIli.loop = 8
 	otherIli.cel = 7
+	-- otherIli.looper = LooperLook
+	otherIli.target = iliraObject
 	iliX = -64
 	
 	myWindow = {
@@ -66,6 +68,7 @@ end,
 Tick = function()
 	iliX = iliX + 4
 	if iliX > 340 then iliX = -20 end
+	--[[
 	if iliX < 134 then
 		otherIli.cel = 7
 	elseif iliX < 180 then
@@ -73,6 +76,8 @@ Tick = function()
 	else
 		otherIli.cel = 6
 	end
+	]]--
+	otherIli:SetHeading(GetAngle(otherIli.x, otherIli.y, iliraObject.x, iliraObject.y))
 
 	iliraObject:Move(iliX, 148)
 		
