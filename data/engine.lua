@@ -147,11 +147,14 @@ end
 -- LOOPERS AND CYCLERS for views
 -- ----------------------------------------------- --
 
-function LooperLook(v)
+function StandAndLook(v, angle)
 	-- given a v.target, sets view to match angle hopefully
 	-- requires a non-nil v.target and loop to be 8
 	if v.target == nil then return end
-	
+	DirLoop(v, angle)
+	local cel = v.loop
+	v.loop = 8
+	v.cel = cel
 end
 
 function CycleForward(v)
@@ -169,16 +172,29 @@ end
 -- ----------------------------------------------- --
 
 function DirLoop(v, angle)
-	local numLoops = v.view:GetNumCels(v.loop)
+	-- Old hardcoded 4-directional results
 	local loop = 0
-	if (angle > 315) or (angle < 45) then
-		if numLoops >= 4 then loop = 3 else loop = -1 end
-	elseif (angle > 135) and (angle < 225) then
-		if numLoops >= 4 then loop = 2 else loop = -1 end
-	elseif (angle < 180) then
-		loop = 0
+	local numLoops = v.view:GetNumLoops()
+	if numLoops < 8 then
+		if (angle > 315) or (angle < 45) then
+			if numLoops >= 4 then loop = 3 else loop = -1 end
+		elseif (angle > 135) and (angle < 225) then
+			if numLoops >= 4 then loop = 2 else loop = -1 end
+		elseif (angle < 180) then
+			loop = 0
+		else
+			loop = 1
+		end
 	else
-		loop = 1
+		if (angle > 298) or (angle < 22) then loop = 3
+		elseif (angle >= 22) and (angle < 67) then loop = 6
+		elseif (angle >= 67) and (angle < 112) then loop = 0
+		elseif (angle >= 112) and (angle < 157) then loop = 4
+		elseif (angle >= 157) and (angle < 202) then loop = 2
+		elseif (angle >= 202) and (angle < 247) then loop = 5
+		elseif (angle >= 247) and (angle < 292) then loop = 1
+		else loop = 7
+		end
 	end
 	
 	if loop ~= -1 then
@@ -188,8 +204,10 @@ end
 
 
 function GetAngle(x1, y1, x2, y2)
-	-- local angle = math.atan(y2 - y1, x2 - x1) * 180 / math.pi;
+	return ATan(y2, x1, y1, x2)
+	--[[
 	local angle = ATan(y2, x1, y1, x2)
 	print ("GetAngle(" .. x1 .. ", " .. y1 .. ", " .. x2 .. ", " .. y2 .. ") => " .. angle .. "\n")
 	return angle;
+	]]--
 end

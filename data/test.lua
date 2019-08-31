@@ -11,7 +11,7 @@ Initialize = function()
 	iliraObject.cycler = CycleForward
 	otherIli.loop = 8
 	otherIli.cel = 7
-	-- otherIli.looper = LooperLook
+	otherIli.looper = StandAndLook
 	otherIli.target = iliraObject
 	iliX = -64
 	
