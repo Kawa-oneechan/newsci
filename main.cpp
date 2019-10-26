@@ -9,9 +9,7 @@ SDL_Renderer* sdlRenderer = NULL;
 int windowWidth, windowHeight, cursorMode;
 
 Pixels shownBuffer;
-#ifdef SHADERS
-Pixels windowBuffer;
-#endif
+
 extern Pixels visualBackground, priorityBackground;
 extern bool soundEnabled;
 extern char scan2ascii[];
@@ -32,41 +30,15 @@ SizedHandle* SizedLoad(const char* file)
 }
 */
 
-#ifdef SHADERS
-void ApplyShader(Pixels sourceBuffer)
-{
-	for (int row = 0; row < screenHeight; row++)
-	{
-		for (int col = 0; col < screenWidth; col++)
-		{
-			auto source = (row * screenWidth) + col;
-			auto target = ((row * 2) * windowWidth) + (col * 2);
-			auto next = target + windowWidth;
-			auto pixel = sourceBuffer[source];
-			windowBuffer[target] = pixel;
-			windowBuffer[target + 1] = pixel;
-			auto r = (pixel & 0x00FF0000) >> 16;
-			auto g = (pixel & 0x0000FF00) >> 8;
-			auto b = (pixel & 0x000000FF) >> 0;
-			pixel = 0xFF000000 | ((r / 2) << 16) | ((g / 2) << 8) | ((b / 2) << 0);
-			windowBuffer[next] = pixel;
-			windowBuffer[next + 1] = pixel;
-		}
-	}
-}
-#endif
+extern void OpenGL_Present();
 
 void Flush()
 {
 	SDL_FlushEvents(SDL_KEYDOWN, SDL_KEYUP);
-#ifdef SHADERS
-	ApplyShader(shownBuffer);
-	SDL_UpdateTexture(sdlTexture, NULL, windowBuffer, windowWidth * sizeof(Color));
-#else
-	SDL_UpdateTexture(sdlTexture, NULL, shownBuffer, screenPitch);
-#endif
-	SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
-	SDL_RenderPresent(sdlRenderer);
+	//SDL_UpdateTexture(sdlTexture, NULL, shownBuffer, screenPitch);
+	//SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
+	//SDL_RenderPresent(sdlRenderer);
+	OpenGL_Present();
 }
 
 void Message(std::string text, std::string title)
@@ -138,6 +110,9 @@ SDL_Cursor* CreateCursor(const char* filename, int x, int y)
 	return cur;
 }
 
+extern char* shaderFile;
+extern void OpenGL_Initialize();
+
 #ifdef _DEBUG
 #include <tchar.h>
 int _tmain(int argc, _TCHAR* argv[])
@@ -164,6 +139,7 @@ int main(int argc, char*argv[])
 		soundEnabled = (!_strcmpi(c, "true"));
 		c = ini->Get("Input", "keymap", "american");
 		keymapFile = c;
+		shaderFile = ini->Get("Video", "shader", "");
 	}
 
 	Pack::Load();
@@ -183,37 +159,26 @@ int main(int argc, char*argv[])
 		free(ret);
 	}
 
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_VIDEO_OPENGL) < 0)
 		return 0;
 	if ((sdlWindow = SDL_CreateWindow("NewSCI", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, SDL_WINDOW_SHOWN)) == NULL)
 	{
 		SDL_Log("Could not create window: %s", SDL_GetError());
 		return 0;
 	}
-	if ((sdlRenderer = SDL_CreateRenderer(sdlWindow, 0, SDL_RENDERER_ACCELERATED)) == NULL)
-	{
-		SDL_Log("Could not create renderer: %s", SDL_GetError());
-		return 0;
-	}
-#ifdef SHADERS
-	if ((sdlTexture = SDL_CreateTexture(sdlRenderer, SDL_PIXELFORMAT_BGR888, SDL_TEXTUREACCESS_STREAMING, windowWidth, windowHeight)) == NULL)
-#else
-	if ((sdlTexture = SDL_CreateTexture(sdlRenderer, SDL_PIXELFORMAT_BGR888, SDL_TEXTUREACCESS_STREAMING, screenWidth, screenHeight)) == NULL)
-#endif
+	OpenGL_Initialize();
+	if ((sdlTexture = SDL_CreateTexture(sdlRenderer, SDL_PIXELFORMAT_BGR888, SDL_TEXTUREACCESS_TARGET, screenWidth, screenHeight)) == NULL)
 	{
 		SDL_Log("Could not create texture: %s", SDL_GetError());
 		return 0;
 	}
 
-	SDL_SetCursor(CreateCursor("hand.png", 0, 0)); //(screenWidth < windowWidth)));
+	//SDL_SetCursor(CreateCursor("hand.png", 0, 0)); //(screenWidth < windowWidth)));
 
 	screenSize = screenWidth * screenHeight;
 	screenPitch = screenWidth * sizeof(Color);
 	visualBuffer = new Color[screenSize];
 	priorityBuffer = new Color[screenSize];
-#ifdef SHADERS
-	windowBuffer = new Color[windowWidth * windowHeight];
-#endif
 	visualBackground = new Color[screenSize];
 	priorityBackground = new Color[screenSize];
 	memset(visualBackground, 0xFF000000, screenSize * sizeof(Color));
@@ -236,15 +201,12 @@ int main(int argc, char*argv[])
 	Audio::Initialize();
 	View::Initialize();
 
-	SDL_SetCursor(CreateCursor("pointer.png", 0, 0));
+	//SDL_SetCursor(CreateCursor("pointer.png", 0, 0));
 	Lua::RunFile("engine.lua");
 	Lua::RunScript(R"(OpenScene("test.lua"))");
 
  	free(visualBuffer);
 	free(priorityBuffer);
-#ifdef SHADERS
-	free(windowBuffer);
-#endif
 	free(visualBackground);
 	free(priorityBackground);
 	SDL_DestroyTexture(sdlTexture);

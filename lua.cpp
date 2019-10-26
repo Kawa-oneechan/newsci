@@ -53,27 +53,20 @@ char scan2ascii[] =
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 };
 
-#ifdef SHADERS
-extern Pixels windowBuffer;
-extern void ApplyShader(Pixels sourceBuffer);
-#endif
-
 void PrepareFrame()
 {
 	memcpy(visualBuffer, visualBackground, screenSize * sizeof(Color));
 	memcpy(priorityBuffer, priorityBackground, screenSize * sizeof(Color));
 }
 
+extern void OpenGL_Present();
+
 void ShowFrame()
 {
-	#ifdef SHADERS
-	ApplyShader(shownBuffer);
-	SDL_UpdateTexture(sdlTexture, NULL, windowBuffer, windowWidth * sizeof(Color));
-#else
-	SDL_UpdateTexture(sdlTexture, NULL, shownBuffer, screenPitch);
-#endif
-	SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
-	SDL_RenderPresent(sdlRenderer);
+//	SDL_UpdateTexture(sdlTexture, NULL, shownBuffer, screenPitch);
+//	SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
+//	SDL_RenderPresent(sdlRenderer);
+	OpenGL_Present();
 }
 
 void HandleEvents()

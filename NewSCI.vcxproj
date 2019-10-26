@@ -63,7 +63,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>fmodex_vc.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winmm.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;fmodex_vc.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winmm.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <OutputFile>$(ProjectDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
@@ -103,6 +103,7 @@
     <ClCompile Include="audio.cpp" />
     <ClCompile Include="lua.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="opengl.cpp" />
     <ClCompile Include="pack.cpp" />
     <ClCompile Include="pictures.cpp" />
     <ClCompile Include="ports.cpp" />
