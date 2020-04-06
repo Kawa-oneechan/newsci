@@ -1,5 +1,4 @@
 #include "NewSCI.h"
-#include "ini.h"
 #include "memory.h"
 
 SDL_Window* sdlWindow = NULL;
@@ -110,8 +109,9 @@ SDL_Cursor* CreateCursor(const char* filename, int x, int y)
 	return cur;
 }
 
-extern char* shaderFile;
 extern void OpenGL_Initialize();
+
+CSimpleIniA ini;
 
 #ifdef _DEBUG
 #include <tchar.h>
@@ -124,24 +124,22 @@ int main(int argc, char*argv[])
 #endif
 	std::string keymapFile;
 
-	{
-		auto ini = new IniFile();
-		ini->Load("resource.ini");
-		screenWidth = atoi(ini->Get("Video", "scrWidth", "320"));
-		screenHeight = atoi(ini->Get("Video", "scrHeight", "200"));
-		windowWidth = atoi(ini->Get("Video", "winWidth", "640"));
-		windowHeight = atoi(ini->Get("Video", "winHeight", "480"));
-		auto c = ini->Get("Video", "cursor", "auto");
-		if (!_strcmpi(c, "single")) cursorMode = 0;
-		else if (!_strcmpi(c, "double")) cursorMode = 1;
-		else cursorMode = 2;
-		c = ini->Get("Sound", "enabled", "true");
-		soundEnabled = (!_strcmpi(c, "true"));
-		c = ini->Get("Input", "keymap", "american");
-		keymapFile = c;
-		shaderFile = ini->Get("Video", "shader", "");
-	}
-
+	ini.SetSpaces(false);
+	ini.SetMultiKey(false);
+	ini.SetMultiLine(false);
+	ini.SetUnicode(true);
+	ini.LoadFile("resource.ini");
+	screenWidth = ini.GetLongValue("Video", "scrWidth", 320);
+	screenHeight = ini.GetLongValue("Video", "scrHeight", 200);
+	windowWidth = ini.GetLongValue("Video", "winWidth", 640);
+	windowHeight = ini.GetLongValue("Video", "winHeight", 480);
+	auto c = ini.GetValue("Video", "cursor", "auto");
+	if (!_strcmpi(c, "single")) cursorMode = 0;
+	else if (!_strcmpi(c, "double")) cursorMode = 1;
+	else cursorMode = 2;
+	soundEnabled = ini.GetBoolValue("Sound", "enabled", true);
+	keymapFile = ini.GetValue("Input", "keymap", "american");
+	
 	Pack::Load();
 
 	if (keymapFile != "american")

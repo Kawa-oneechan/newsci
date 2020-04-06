@@ -9,11 +9,12 @@ extern Pixels shownBuffer;
 
 SDL_Texture* sdlShader = NULL;
 
+extern CSimpleIniA ini;
+
 //unsigned int programId = 0;
 #define MAX_SHADERS 4
 unsigned int programIds[MAX_SHADERS] = { 0 };
 int numShaders = 1;
-char* shaderFile = NULL;
 int scale = 1, offsetX = 0, offsetY = 0;
 
 bool sdl2oh10 = false;
@@ -264,7 +265,7 @@ void presentBackBuffer(SDL_Renderer *renderer, SDL_Window* win)
 		}
 	}
 
-	glUseProgram(oldProgramId);
+	//glUseProgram(oldProgramId);
 
 	SDL_GL_SwapWindow(win);
 }
@@ -282,7 +283,7 @@ void OpenGL_Initialize()
 			//https://www.youtube.com/watch?v=5FjWe31S_0g
 			char msg[512];
 			sprintf_s(msg, 512, "You are trying to run with an outdated version of SDL.\n\nYou have version %d.%d.%d.\nYou need version 2.0.4 or later.", linked.major, linked.minor, linked.patch);
-			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Clunibus", msg, NULL);
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "NewSCI", msg, NULL);
 			return;
 		}
 	}
@@ -295,10 +296,37 @@ void OpenGL_Initialize()
 		return;
 	}
 
+	if ((sdlShader = SDL_CreateTexture(sdlRenderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, screenWidth, screenHeight)) == NULL)
+	{
+		SDL_Log("Could not create texture: %s", SDL_GetError());
+		return;
+	}
+
 	initGLExtensions();
-	//programId = compileProgram(shaderFile); //("crt.fragment");
-	programIds[0] = compileProgram(shaderFile);
-	numShaders = 1;
+
+	numShaders = ini.GetLongValue("Shaders", "length", -1);
+	if (numShaders <= 0)
+	{
+		if (numShaders == 0)
+			programIds[0] = 0;
+		else
+			programIds[0] = compileProgram(ini.GetValue("Shaders", "main", ""));
+		numShaders = 1;
+	}
+	else
+	{
+		if (numShaders >= MAX_SHADERS)
+		{
+			SDL_Log("Too many shaders specified: can only do %d but %d were requested.", MAX_SHADERS, numShaders);
+			numShaders = MAX_SHADERS;
+		}
+		for (int i = 0; i < numShaders; i++)
+		{
+			char key[16] = { 0 };
+			sprintf_s(key, 16, "shader%d", i + 1);
+			programIds[i] = compileProgram(ini.GetValue("Shaders", key, ""));
+		}
+	}
 }
 
 void OpenGL_Present()

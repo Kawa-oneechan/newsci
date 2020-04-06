@@ -99,7 +99,6 @@
   <ItemGroup>
     <ClCompile Include="controls.cpp" />
     <ClCompile Include="fonts.cpp" />
-    <ClCompile Include="ini.cpp" />
     <ClCompile Include="audio.cpp" />
     <ClCompile Include="lua.cpp" />
     <ClCompile Include="main.cpp" />
@@ -158,7 +157,6 @@
     <ClInclude Include="audio.h" />
     <ClInclude Include="controls.h" />
     <ClInclude Include="fonts.h" />
-    <ClInclude Include="ini.h" />
     <ClInclude Include="lua.h" />
     <ClInclude Include="NewSCI.h" />
     <ClInclude Include="pack.h" />
@@ -228,6 +226,7 @@
     <ClInclude Include="support\sdl2\SDL_types.h" />
     <ClInclude Include="support\sdl2\SDL_version.h" />
     <ClInclude Include="support\sdl2\SDL_video.h" />
+    <ClInclude Include="support\SimpleIni.h" />
     <ClInclude Include="support\sol.hpp" />
     <ClInclude Include="types.h" />
     <ClInclude Include="views.h" />

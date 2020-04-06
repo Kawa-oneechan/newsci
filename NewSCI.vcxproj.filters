@@ -48,9 +48,6 @@
     <ClCompile Include="support\picopng.cpp">
       <Filter>Support Files</Filter>
     </ClCompile>
-    <ClCompile Include="ini.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="audio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -208,9 +205,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="audio.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ini.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="support\fmod.h">
@@ -419,6 +413,9 @@
     </ClInclude>
     <ClInclude Include="support\sdl2\SDL_version.h">
       <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\SimpleIni.h">
+      <Filter>Support Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
