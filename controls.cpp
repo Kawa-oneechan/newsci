@@ -2,6 +2,8 @@
 
 extern int windowWidth, windowHeight;
 
+extern void ScaleMouse(signed int *x, signed int *y);
+
 bool DrawWindowTextControl(sol::table controlDef, int leftOffset = 0, int topOffset = 0, int maxWidth = 0)
 {
 	//auto visible = controlDef["visible"].get<bool>();
@@ -43,13 +45,10 @@ bool DrawWindowButtonControl(sol::table controlDef, int leftOffset = 0, int topO
 	currentPort.SetPen(controlDef["border"].get_or(0) | 0xFF000000);
 	DrawRect(&r);
 	
-	auto mouseDivX = windowWidth / screenWidth;
-	auto mouseDivY = windowHeight / screenHeight;
 	auto mouseX = 0;
 	auto mouseY = 0;
 	auto mouseB = SDL_GetMouseState(&mouseX, &mouseY);
-	mouseX /= mouseDivX;
-	mouseY /= mouseDivY;
+	ScaleMouse(&mouseX, &mouseY);
 	if (mouseX >= r.l && mouseX <= r.r && mouseY >= r.t && mouseY <= r.b)
 	{
 		r.Inflate(-1, -1);
@@ -83,15 +82,12 @@ bool DrawWindowInputControl(sol::table controlDef, int leftOffset = 0, int topOf
 	if (width == 0) width = screenWidth - left;
 	auto r = Rect(left, top, left + width, top + height);
 	auto text = controlDef["text"].get<std::string>();
-	auto caretPos = controlDef["caret"].get<int>();
+	auto caretPos = controlDef["caret"].get<unsigned int>();
 
-	auto mouseDivX = windowWidth / screenWidth;
-	auto mouseDivY = windowHeight / screenHeight;
 	auto mouseX = 0;
 	auto mouseY = 0;
 	auto mouseB = SDL_GetMouseState(&mouseX, &mouseY);
-	mouseX /= mouseDivX;
-	mouseY /= mouseDivY;
+	ScaleMouse(&mouseX, &mouseY);
 	auto inside = (mouseX >= r.l && mouseX <= r.r && mouseY >= r.t && mouseY <= r.b);
 
 	currentPort.SetPen(controlDef["color"].get_or(0) | 0xFF000000);

@@ -226,6 +226,7 @@
     <ClInclude Include="support\sdl2\SDL_syswm.h" />
     <ClInclude Include="support\sdl2\SDL_timer.h" />
     <ClInclude Include="support\sdl2\SDL_types.h" />
+    <ClInclude Include="support\sdl2\SDL_version.h" />
     <ClInclude Include="support\sdl2\SDL_video.h" />
     <ClInclude Include="support\sol.hpp" />
     <ClInclude Include="types.h" />

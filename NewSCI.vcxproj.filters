@@ -417,5 +417,8 @@
     <ClInclude Include="controls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="support\sdl2\SDL_version.h">
+      <Filter>Support Files\sdl</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

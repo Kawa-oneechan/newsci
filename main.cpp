@@ -161,7 +161,7 @@ int main(int argc, char*argv[])
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_VIDEO_OPENGL) < 0)
 		return 0;
-	if ((sdlWindow = SDL_CreateWindow("NewSCI", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, SDL_WINDOW_SHOWN)) == NULL)
+	if ((sdlWindow = SDL_CreateWindow("NewSCI", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)) == NULL)
 	{
 		SDL_Log("Could not create window: %s", SDL_GetError());
 		return 0;

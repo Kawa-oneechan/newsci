@@ -69,11 +69,22 @@ void ShowFrame()
 	OpenGL_Present();
 }
 
+extern int scale, offsetX, offsetY;
+
+void ScaleMouse(signed int *x, signed int *y)
+{
+	signed int uX = *x, uY = *y;
+	signed int nX = *x, nY = *y;
+
+	nX = (nX - offsetX) / scale;
+	nY = (nY - offsetY) / scale;
+
+	*x = nX;
+	*y = nY;
+}
+
 void HandleEvents()
 {
-	auto mouseDivX = windowWidth / screenWidth;
-	auto mouseDivY = windowHeight / screenHeight;
-
 	SDL_Event ev;
 	while (SDL_PollEvent(&ev) != 0)
 	{
@@ -83,12 +94,14 @@ void HandleEvents()
 			Lua::RunScript("quit = true");
 			break;
 		case SDL_MOUSEMOTION:
-			Lua::RunScript(fmt::format("table.insert(events, {{ type = 1, x = {}, y = {} }})", ev.motion.x / mouseDivX, ev.motion.y / mouseDivY));
+			ScaleMouse(&ev.motion.x, &ev.motion.y);
+			Lua::RunScript(fmt::format("table.insert(events, {{ type = 1, x = {}, y = {} }})", ev.motion.x, ev.motion.y));
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 		case SDL_MOUSEBUTTONUP:
+			ScaleMouse(&ev.motion.x, &ev.motion.y);
 			Lua::RunScript(fmt::format("table.insert(events, {{ type = {}, button = {}, x = {}, y = {} }})", (ev.type == SDL_MOUSEBUTTONDOWN) ? 2 : 3,
-				ev.button.button, ev.button.x / mouseDivX, ev.button.y / mouseDivY));
+				ev.button.button, ev.button.x, ev.button.y));
 			break;
 		case SDL_KEYDOWN:
 		case SDL_KEYUP:

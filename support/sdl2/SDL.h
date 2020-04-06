@@ -55,7 +55,7 @@
 //#include "SDL_system.h"
 //#include "SDL_thread.h"
 #include "SDL_timer.h"
-//#include "SDL_version.h"
+#include "SDL_version.h"
 #include "SDL_video.h"
 
 #include "begin_code.h"
