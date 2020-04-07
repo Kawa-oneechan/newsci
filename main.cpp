@@ -209,6 +209,8 @@ int main(int argc, char*argv[])
 		return 0;
 	}
 
+	SDL_ShowCursor(0);
+
 	screenSize = screenWidth * screenHeight;
 	screenPitch = screenWidth * sizeof(Color);
 	visualBuffer = new Color[screenSize];
