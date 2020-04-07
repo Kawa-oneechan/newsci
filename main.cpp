@@ -1,11 +1,14 @@
 #include "NewSCI.h"
 #include "memory.h"
 
-SDL_Window* sdlWindow = NULL;
-SDL_Texture* sdlTexture = NULL;
-SDL_Renderer* sdlRenderer = NULL;
+SDL_Window* sdlWindow = nullptr;
+SDL_Texture* sdlTexture = nullptr;
+SDL_Renderer* sdlRenderer = nullptr;
 
 int windowWidth = 640, windowHeight = 400, cursorMode;
+
+Image* cursorImg = nullptr;
+int cursorHotX = 0, cursorHotY = 0;
 
 Pixels shownBuffer;
 
@@ -14,13 +17,63 @@ extern bool soundEnabled;
 extern char scan2ascii[];
 
 extern void OpenGL_Present();
+extern void ScaleMouse(signed int *x, signed int *y);
+
+void DrawCursor()
+{
+	if (cursorImg == nullptr)
+		return;
+	int mouseX, mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
+	ScaleMouse(&mouseX, &mouseY);
+
+	int sx = 0;
+	int sy = 0;
+	//get clipped
+	auto w = cursorImg->width;
+	auto h = cursorImg->height;
+	auto l = mouseX - cursorHotX;
+	auto t = mouseY - cursorHotY;
+	if (l + w > screenWidth)
+		w = screenWidth - l;
+	if (t + h > screenHeight)
+		h = screenHeight - t;
+	if (l < 0)
+	{
+		sx += -l;
+		w -= -l;
+		l = 0;
+	}
+	if (t < 0)
+	{
+		sy += -t;
+		h -= -t;
+		t = 0;
+	}
+
+	for (auto y = 0; y < cursorImg->height; y++)
+	{
+		for (auto x = 0; x < cursorImg->width; x++)
+		{
+			auto tx = l + x;
+			auto ty = t + y;
+			auto pixel = cursorImg->pixels[((sy + y) * cursorImg->width) + (sx + x)];
+			SetPixel(tx, ty, pixel);
+		}
+	}
+}
+
+void SetCursor(const char* filename, int x, int y)
+{
+	cursorImg = new Image(filename);
+	cursorHotX = x;
+	cursorHotY = y;
+}
 
 void Flush()
 {
 	SDL_FlushEvents(SDL_KEYDOWN, SDL_KEYUP);
-	//SDL_UpdateTexture(sdlTexture, NULL, shownBuffer, screenPitch);
-	//SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
-	//SDL_RenderPresent(sdlRenderer);
+	DrawCursor();
 	OpenGL_Present();
 }
 
@@ -64,35 +117,6 @@ void Message(std::string text, std::string title)
 	myWindow.Close();
 }
 
-SDL_Cursor* CreateCursor(const char* filename, int x, int y)
-{
-	/*
-	unsigned long size, width, height;
-	Handle png = LoadFromFile(filename, &size);
-	std::vector<unsigned char> image;
-	decodePNG(image, width, height, (const unsigned char*)png, size);
-	free(png);
-	*/
-	auto image = new Image(filename);
-
-	SDL_Surface* surf = SDL_CreateRGBSurfaceWithFormatFrom(image->pixels, image->width, image->height, 32, 4 * image->width, SDL_PIXELFORMAT_ABGR8888);
-
-	bool doubleUp = cursorMode > 0;
-	if (cursorMode == 2)
-		doubleUp = (screenWidth < windowWidth);
-
-	if (doubleUp)
-	{
-		SDL_Surface* newSurf = SDL_CreateRGBSurfaceWithFormat(0, image->width * 2, image->height * 2, 32, SDL_PIXELFORMAT_ABGR8888);
-		SDL_UpperBlitScaled(surf, NULL, newSurf, NULL);
-		SDL_FreeSurface(surf);
-		surf = newSurf;
-	}
-
-	SDL_Cursor* cur = SDL_CreateColorCursor(surf, x, y);
-	return cur;
-}
-
 extern void OpenGL_Initialize();
 
 JSONValue *settings = nullptr;
@@ -114,37 +138,42 @@ int main(int argc, char*argv[])
 		settings = JSON::Parse(data);
 		{
 			auto root = settings->AsObject();
-			auto video = root["video"]->AsObject();
-			if (root["video"]->HasChild("screen"))
+			if (settings->HasChild("video"))
 			{
-				auto scrSize = video["screen"]->AsArray();
-				screenWidth = (int)scrSize[0]->AsNumber();
-				screenHeight = (int)scrSize[1]->AsNumber();
-			}
-			if (root["video"]->HasChild("window"))
-			{
-				if (video["window"]->IsArray())
+				auto video = root["video"]->AsObject();
+				if (root["video"]->HasChild("screen"))
 				{
-					auto winSize = video["window"]->AsArray();
-					windowWidth = (int)winSize[0]->AsNumber();
-					windowHeight = (int)winSize[1]->AsNumber();
+					auto scrSize = video["screen"]->AsArray();
+					screenWidth = (int)scrSize[0]->AsNumber();
+					screenHeight = (int)scrSize[1]->AsNumber();
 				}
-				else if (video["window"]->IsNumber())
+				if (root["video"]->HasChild("window"))
 				{
-					auto scale = (int)video["window"]->AsNumber();
-					windowWidth = screenWidth * scale;
-					windowHeight = screenHeight * scale;
+					if (video["window"]->IsArray())
+					{
+						auto winSize = video["window"]->AsArray();
+						windowWidth = (int)winSize[0]->AsNumber();
+						windowHeight = (int)winSize[1]->AsNumber();
+					}
+					else if (video["window"]->IsNumber())
+					{
+						auto scale = (int)video["window"]->AsNumber();
+						windowWidth = screenWidth * scale;
+						windowHeight = screenHeight * scale;
+					}
 				}
 			}
-			if (root["video"]->HasChild("sound"))
+			if (settings->HasChild("sound"))
 			{
 				auto sound = root["sound"]->AsObject();
-				soundEnabled = sound["enabled"]->AsBool();
+				if (root["sound"]->HasChild("enabled"))
+					soundEnabled = sound["enabled"]->AsBool();
 			}
-			if (root["video"]->HasChild("input"))
+			if (settings->HasChild("input"))
 			{
 				auto input = root["input"]->AsObject();
-				keymapFile = input["keymap"]->AsString();
+				if (root["input"]->HasChild("keymap"))
+					keymapFile = input["keymap"]->AsString();
 			}
 		}
 	}
@@ -206,9 +235,13 @@ int main(int argc, char*argv[])
 	Audio::Initialize();
 	View::Initialize();
 
+	SetCursor("pointer.png", 0, 0);
+
 	Lua::RunFile("engine.lua");
 	Lua::RunScript(R"(OpenScene("test.lua"))");
 
+	if (cursorImg)
+		delete cursorImg;
  	free(visualBuffer);
 	free(priorityBuffer);
 	free(visualBackground);

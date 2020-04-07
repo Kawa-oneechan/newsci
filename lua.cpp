@@ -60,12 +60,11 @@ void PrepareFrame()
 }
 
 extern void OpenGL_Present();
+extern void DrawCursor();
 
 void ShowFrame()
 {
-//	SDL_UpdateTexture(sdlTexture, NULL, shownBuffer, screenPitch);
-//	SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
-//	SDL_RenderPresent(sdlRenderer);
+	DrawCursor();
 	OpenGL_Present();
 }
 
