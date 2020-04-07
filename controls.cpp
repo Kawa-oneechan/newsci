@@ -113,7 +113,34 @@ bool DrawWindowInputControl(sol::table controlDef, int leftOffset = 0, int topOf
 		for (auto ev : events)
 		{
 			auto evt = ev.second.as<sol::table>();
-			if (evt["type"].get<int>() != 17)
+
+			if (evt["type"].get<int>() == 3) //mouse up
+			{
+				auto x = evt["x"].get<int>() - left;
+				auto y = evt["y"].get<int>() - top;
+				auto newCaretPos = 0;
+				caretRect = { 0, 0, 0, 0 };
+				currentPort.font->MeasureString(text, &caretRect, width);
+				if (x > caretRect.r)
+					newCaretPos = text.length() + 1;
+				else
+				{
+					for (auto i = 0u; i < text.length(); i++)
+					{
+						upToCaret = text.substr(0, i);
+						caretRect = { 0, 0, 0, 0 };
+						currentPort.font->MeasureString(upToCaret, &caretRect, width);
+						if (x >= caretRect.r)
+							newCaretPos = i;
+						else
+							break;
+					}
+				}
+				controlDef.set("caret", newCaretPos);
+				continue;
+			}
+
+			if (evt["type"].get<int>() != 17) //anything but keyup
 				continue;
 			auto scan = (SDL_Scancode)evt["scan"].get<int>();
 			auto sym = evt["sym"].get<std::string>();
