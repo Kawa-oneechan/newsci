@@ -242,10 +242,6 @@ int main(int argc, char*argv[])
 
 	if (cursorImg)
 		delete cursorImg;
- 	free(visualBuffer);
-	free(priorityBuffer);
-	free(visualBackground);
-	free(priorityBackground);
 	SDL_DestroyTexture(sdlTexture);
 	SDL_DestroyRenderer(sdlRenderer);
 	SDL_DestroyWindow(sdlWindow);
