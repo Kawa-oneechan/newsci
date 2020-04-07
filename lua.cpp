@@ -210,7 +210,6 @@ void Lua::Initialize()
 	Sol.set_function("PrepareFrame", PrepareFrame);
 	Sol.set_function("ShowFrame", ShowFrame);
 	Sol.set_function("HandleEvents", HandleEvents);
-	//Sol.set_function("OldShowFrame", OldShowFrame);
 	Sol.set_function("Display", Display);
 	Sol.set_function("ShowScreen", [](int screenID) { shownBuffer = (screenID == 0) ? visualBuffer : priorityBuffer; });
 	Sol.set_function("DrawWindow", DrawWindow);

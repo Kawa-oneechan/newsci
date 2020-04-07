@@ -324,31 +324,6 @@ void OpenGL_Initialize()
 			}
 		}
 	}
-	/*
-	numShaders = ini.GetLongValue("Shaders", "length", -1);
-	if (numShaders <= 0)
-	{
-		if (numShaders == 0)
-			programIds[0] = 0;
-		else
-			programIds[0] = compileProgram(ini.GetValue("Shaders", "main", ""));
-		numShaders = 1;
-	}
-	else
-	{
-		if (numShaders >= MAX_SHADERS)
-		{
-			SDL_Log("Too many shaders specified: can only do %d but %d were requested.", MAX_SHADERS, numShaders);
-			numShaders = MAX_SHADERS;
-		}
-		for (int i = 0; i < numShaders; i++)
-		{
-			char key[16] = { 0 };
-			sprintf_s(key, 16, "shader%d", i + 1);
-			programIds[i] = compileProgram(ini.GetValue("Shaders", key, ""));
-		}
-	}
-	*/
 }
 
 void OpenGL_Present()

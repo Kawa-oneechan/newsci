@@ -36,11 +36,4 @@ public:
 	void Close();
 };
 
-/*
-namespace Windows
-{
-	void Bind(lua_State* L);
-}
-*/
-
 extern Port mainPort, currentPort;

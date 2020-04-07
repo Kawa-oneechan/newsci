@@ -13,22 +13,6 @@ extern Pixels visualBackground, priorityBackground;
 extern bool soundEnabled;
 extern char scan2ascii[];
 
-/*
-SizedHandle* SizedLoad(const char* file)
-{
-	FILE* fd;
-	fopen_s(&fd, file, "rb");
-	fseek(fd, 0, SEEK_END);
-	auto len = ftell(fd);
-	fseek(fd, 0, SEEK_SET);
-	SizedHandle* ret = (SizedHandle*)malloc(sizeof(SizedHandle) + len);
-	ret->size = len;
-	fread(&ret->data, sizeof(char), len, fd);
-	fclose(fd);
-	return ret;
-}
-*/
-
 extern void OpenGL_Present();
 
 void Flush()
@@ -111,7 +95,6 @@ SDL_Cursor* CreateCursor(const char* filename, int x, int y)
 
 extern void OpenGL_Initialize();
 
-//CSimpleIniA ini;
 JSONValue *settings = nullptr;
 
 #ifdef _DEBUG
@@ -166,24 +149,6 @@ int main(int argc, char*argv[])
 		}
 	}
 
-	/*
-	ini.SetSpaces(false);
-	ini.SetMultiKey(false);
-	ini.SetMultiLine(false);
-	ini.SetUnicode(true);
-	ini.LoadFile("resource.ini");
-	screenWidth = ini.GetLongValue("Video", "scrWidth", 320);
-	screenHeight = ini.GetLongValue("Video", "scrHeight", 200);
-	windowWidth = ini.GetLongValue("Video", "winWidth", 640);
-	windowHeight = ini.GetLongValue("Video", "winHeight", 480);
-	auto c = ini.GetValue("Video", "cursor", "auto");
-	if (!_strcmpi(c, "single")) cursorMode = 0;
-	else if (!_strcmpi(c, "double")) cursorMode = 1;
-	else cursorMode = 2;
-	soundEnabled = ini.GetBoolValue("Sound", "enabled", true);
-	keymapFile = ini.GetValue("Input", "keymap", "american");
-	*/
-
 	Pack::Load();
 
 	if (keymapFile != "american")
@@ -215,8 +180,6 @@ int main(int argc, char*argv[])
 		return 0;
 	}
 
-	//SDL_SetCursor(CreateCursor("hand.png", 0, 0)); //(screenWidth < windowWidth)));
-
 	screenSize = screenWidth * screenHeight;
 	screenPitch = screenWidth * sizeof(Color);
 	visualBuffer = new Color[screenSize];
@@ -243,7 +206,6 @@ int main(int argc, char*argv[])
 	Audio::Initialize();
 	View::Initialize();
 
-	//SDL_SetCursor(CreateCursor("pointer.png", 0, 0));
 	Lua::RunFile("engine.lua");
 	Lua::RunScript(R"(OpenScene("test.lua"))");
 
