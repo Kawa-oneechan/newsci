@@ -14,7 +14,8 @@
 #include <SDL.h>
 #include <map>
 #include <vector>
-#include "support/SimpleIni.h"
+#include "support/sol.hpp"
+#include "support/json/JSON.h"
 #include "lua.h"
 #include "types.h"
 #include "serializer.h"

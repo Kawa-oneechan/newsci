@@ -24,3 +24,4 @@ NewSCI.exe
 *.pdb
 *.sdf
 *.VC.*
+*.suo

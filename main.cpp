@@ -5,7 +5,7 @@ SDL_Window* sdlWindow = NULL;
 SDL_Texture* sdlTexture = NULL;
 SDL_Renderer* sdlRenderer = NULL;
 
-int windowWidth, windowHeight, cursorMode;
+int windowWidth = 640, windowHeight = 400, cursorMode;
 
 Pixels shownBuffer;
 
@@ -111,7 +111,8 @@ SDL_Cursor* CreateCursor(const char* filename, int x, int y)
 
 extern void OpenGL_Initialize();
 
-CSimpleIniA ini;
+//CSimpleIniA ini;
+JSONValue *settings = nullptr;
 
 #ifdef _DEBUG
 #include <tchar.h>
@@ -122,8 +123,50 @@ int _tmain(int argc, _TCHAR* argv[])
 int main(int argc, char*argv[])
 {
 #endif
-	std::string keymapFile;
+	std::string keymapFile = "american";
 
+	char* data = LoadFile("resource.json", nullptr);
+	if (data != nullptr)
+	{
+		settings = JSON::Parse(data);
+		{
+			auto root = settings->AsObject();
+			auto video = root["video"]->AsObject();
+			if (root["video"]->HasChild("screen"))
+			{
+				auto scrSize = video["screen"]->AsArray();
+				screenWidth = (int)scrSize[0]->AsNumber();
+				screenHeight = (int)scrSize[1]->AsNumber();
+			}
+			if (root["video"]->HasChild("window"))
+			{
+				if (video["window"]->IsArray())
+				{
+					auto winSize = video["window"]->AsArray();
+					windowWidth = (int)winSize[0]->AsNumber();
+					windowHeight = (int)winSize[1]->AsNumber();
+				}
+				else if (video["window"]->IsNumber())
+				{
+					auto scale = (int)video["window"]->AsNumber();
+					windowWidth = screenWidth * scale;
+					windowHeight = screenHeight * scale;
+				}
+			}
+			if (root["video"]->HasChild("sound"))
+			{
+				auto sound = root["sound"]->AsObject();
+				soundEnabled = sound["enabled"]->AsBool();
+			}
+			if (root["video"]->HasChild("input"))
+			{
+				auto input = root["input"]->AsObject();
+				keymapFile = input["keymap"]->AsString();
+			}
+		}
+	}
+
+	/*
 	ini.SetSpaces(false);
 	ini.SetMultiKey(false);
 	ini.SetMultiLine(false);
@@ -139,7 +182,8 @@ int main(int argc, char*argv[])
 	else cursorMode = 2;
 	soundEnabled = ini.GetBoolValue("Sound", "enabled", true);
 	keymapFile = ini.GetValue("Input", "keymap", "american");
-	
+	*/
+
 	Pack::Load();
 
 	if (keymapFile != "american")

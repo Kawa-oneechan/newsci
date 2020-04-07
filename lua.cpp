@@ -79,6 +79,11 @@ void ScaleMouse(signed int *x, signed int *y)
 	nX = (nX - offsetX) / scale;
 	nY = (nY - offsetY) / scale;
 
+	if (nX < 0) nX = 0;
+	if (nY < 0) nY = 0;
+	if (nX >= screenWidth) nX = screenWidth - 1;
+	if (nY >= screenHeight) nY = screenHeight - 1;
+
 	*x = nX;
 	*y = nY;
 }

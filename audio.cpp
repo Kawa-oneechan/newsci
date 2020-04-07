@@ -3,7 +3,7 @@
 
 FMOD::System* Audio::system;
 std::vector<Audio*> Audio::playing;
-bool soundEnabled;
+bool soundEnabled = true;
 
 void Audio::Initialize()
 {

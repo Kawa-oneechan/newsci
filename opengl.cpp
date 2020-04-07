@@ -9,9 +9,8 @@ extern Pixels shownBuffer;
 
 SDL_Texture* sdlShader = NULL;
 
-extern CSimpleIniA ini;
+extern JSONValue *settings;
 
-//unsigned int programId = 0;
 #define MAX_SHADERS 4
 unsigned int programIds[MAX_SHADERS] = { 0 };
 int numShaders = 1;
@@ -110,7 +109,7 @@ GLuint compileProgram(const char* fragFile)
 
 	vtxShaderId = compileShader(vertexShader, GL_VERTEX_SHADER);
 
-	auto source = Pack::Read(fragFile);
+	auto source = LoadFile(fragFile, nullptr);
 	fragShaderId = compileShader(source, GL_FRAGMENT_SHADER);
 	free(source);
 
@@ -304,6 +303,28 @@ void OpenGL_Initialize()
 
 	initGLExtensions();
 
+	programIds[0] = 0;
+	if (settings != nullptr)
+	{
+		auto t = settings->AsObject();
+		t = t["video"]->AsObject();
+		auto s = t["shader"];
+		if (s->IsString())
+		{
+			programIds[0] = compileProgram(s->AsString().c_str());
+			numShaders = 1;
+		}
+		else if (s->IsArray())
+		{
+			auto a = s->AsArray();
+			numShaders = a.size();
+			for (int i = 0; i < numShaders; i++)
+			{
+				programIds[i] = compileProgram(a[i]->AsString().c_str());
+			}
+		}
+	}
+	/*
 	numShaders = ini.GetLongValue("Shaders", "length", -1);
 	if (numShaders <= 0)
 	{
@@ -327,6 +348,7 @@ void OpenGL_Initialize()
 			programIds[i] = compileProgram(ini.GetValue("Shaders", key, ""));
 		}
 	}
+	*/
 }
 
 void OpenGL_Present()

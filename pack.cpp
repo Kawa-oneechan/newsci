@@ -74,9 +74,8 @@ namespace Pack
 
 Handle LoadFile(std::string filename, unsigned long *size)
 {
-	auto looseFile = fmt::format("resource\\{}", filename);
 	FILE* fd;
-	if (fopen_s(&fd, looseFile.c_str(), "rb") != 0)
+	if (fopen_s(&fd, filename.c_str(), "rb") != 0)
 	{
 		Pack::PackFileRecord* pfr = Pack::Find(filename);
 		if (pfr)

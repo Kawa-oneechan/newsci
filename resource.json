@@ -1,0 +1,17 @@
+{
+	"video":
+	{
+		//"screen": [ 320, 200 ],
+		"window": 4, //[ 640, 400 ],
+		"shader": [ "pal-r57shell.fs", "crt.fs" ] //"crt.fs"
+	},
+	"sound":
+	{
+		"enabled": true
+	},
+	"input":
+	{
+		"keymap": "american",
+		"joypad": false
+	}
+}

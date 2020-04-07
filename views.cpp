@@ -1,6 +1,4 @@
 #include "NewSCI.h"
-#include "support\sol.hpp"
-#include "support/json/JSON.h"
 
 View::View(std::string filename)
 {
