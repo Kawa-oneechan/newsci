@@ -414,8 +414,5 @@
     <ClInclude Include="support\sdl2\SDL_version.h">
       <Filter>Support Files\sdl</Filter>
     </ClInclude>
-    <ClInclude Include="support\SimpleIni.h">
-      <Filter>Support Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
