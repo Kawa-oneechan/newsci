@@ -1,4 +1,5 @@
 #include "NewSCI.h"
+#include "support/fmt/format.h"
 
 View::View(std::string filename)
 {
@@ -63,6 +64,74 @@ void LoadSimpleScene(std::string vis, std::string pri)
 	delete backdrop;
 }
 
+void LoadScene(std::string filename)
+{
+	char* data = LoadFile(filename, nullptr);
+	auto json = JSON::Parse(data);
+	auto root = json->AsObject();
+	auto vis = root["visual"]->AsString();
+	auto pri = root["priority"]->AsString();
+	LoadSimpleScene(vis, pri);
+	auto jsonPolys = root["walkPolys"]->AsArray();
+	std::string lua = "polygons = { ";
+	for (auto i = 0; i < jsonPolys.size(); i++)
+	{
+		auto thisJP = jsonPolys[i]->AsArray();
+		auto excluding = thisJP[0]->AsBool();
+		lua += fmt::format("{{ {}", excluding);
+		for (auto j = 1, n = 0; j < thisJP.size(); j += 2, n++)
+		{
+			auto x = (int)thisJP[j + 0]->AsNumber();
+			auto y = (int)thisJP[j + 1]->AsNumber();
+			SDL_Log("Poly %d, point %d: %dx%d", i, n, x, y);
+			lua += fmt::format(", {}, {}", x, y);
+		}
+		lua += "}";
+		if (i < jsonPolys.size() - 1)
+			lua += ", ";
+	}
+	lua += "}";
+	Lua::RunScript(lua);
+}
+
+void DrawLine(int x1, int y1, int x2, int y2, int color)
+{
+	auto dx = abs(x2 - x1), sx = x1 < x2 ? 1 : -1;
+	auto dy = abs(y2 - y1), sy = y1 < y2 ? 1 : -1;
+	auto err = (dx > dy ? dx : -dy) / 2, e2 = 0;
+
+	for (;;)
+	{
+		SetPixel(x1, y1, color);
+		if (x1 == x2 && y1 == y2) break;
+		e2 = err;
+		if (e2 > -dx) { err -= dy; x1 += sx; }
+		if (e2 <  dy) { err += dx; y1 += sy; }
+	}
+}
+
+void DrawPolys()
+{
+	auto polys = Sol["polygons"].get<sol::table>();
+	for (auto pkv : polys)
+	{
+		auto lastX = -1, lastY = -1;
+		auto poly = pkv.second.as<sol::table>();
+		auto excluding = poly[1].get<bool>();
+		for (auto i = 2, j = 0; i < poly.size(); i += 2, j++)
+		{
+			auto x = poly[i + 0].get<int>();
+			auto y = poly[i + 1].get<int>();
+			if (j > 0)
+				DrawLine(lastX, lastY, x, y, excluding ? RED : GREEN);
+			lastX = x;
+			lastY = y;
+		}
+		//Close it up
+		DrawLine(lastX, lastY, poly[2].get<int>(), poly[3].get<int>(), excluding ? RED : GREEN);
+	}
+}
+
 void View::Initialize()
 {
 	Sol.new_usertype<View>(
@@ -73,6 +142,9 @@ void View::Initialize()
 		"GetNumCels", &GetNumCels
 	);
 	Sol.set_function("LoadSimpleScene", &LoadSimpleScene);
+	Sol.set_function("LoadScene", &LoadScene);
+	Sol.set_function("DrawLine", DrawLine);
+	Sol.set_function("DrawPolys", DrawPolys);
 }
 
 void View::Draw(int loop, int cel, int left, int top, int priority, bool noOffset)

@@ -6,6 +6,7 @@ cast = {}
 events = {}
 backgroundMusic = nil
 modalDialog = false
+polygons = {}
 
 currentSceneFile = ""
 currentScene = {
@@ -19,6 +20,8 @@ currentScene = {
 
 function OpenScene(filename)
 	currentSceneFile = filename
+	cast = {}
+	polygons = {}
 	dofile(filename)
 	if restoring then
 		currentScene.Deserialize()

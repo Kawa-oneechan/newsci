@@ -1,6 +1,6 @@
 currentScene = {
 Initialize = function()
-	LoadSimpleScene("testroom.png", "testroom-p.png")
+	LoadScene("testroom.pic.json")
 
 	egoView = View.new("ego.view.json")
 	egoObject = ViewObj.new(egoView, 128, 180)
@@ -106,6 +106,9 @@ Tick = function()
 			end
 		end
 	end
+
+	DrawPolys()	
+
 end,
 
 Serialize = function()
