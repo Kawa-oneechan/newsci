@@ -51,9 +51,9 @@ void DrawCursor()
 		t = 0;
 	}
 
-	for (auto y = 0; y < cursorImg->height; y++)
+	for (auto y = 0; y < h; y++)
 	{
-		for (auto x = 0; x < cursorImg->width; x++)
+		for (auto x = 0; x < w; x++)
 		{
 			auto tx = l + x;
 			auto ty = t + y;
