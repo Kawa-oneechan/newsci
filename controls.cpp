@@ -4,6 +4,20 @@ extern int windowWidth, windowHeight;
 
 extern void ScaleMouse(signed int *x, signed int *y);
 
+void EatTheMouse()
+{
+	auto events = Sol["events"].get<sol::table>();
+	for (auto ev : events)
+	{
+		auto evt = ev.second.as<sol::table>();
+		if (evt["type"].get<int>() == 3) //mouse up
+		{
+			evt["handled"] = true;
+			break;
+		}
+	}
+}
+
 bool DrawWindowTextControl(sol::table controlDef, int leftOffset = 0, int topOffset = 0, int maxWidth = 0)
 {
 	//auto visible = controlDef["visible"].get<bool>();
@@ -61,6 +75,7 @@ bool DrawWindowButtonControl(sol::table controlDef, int leftOffset = 0, int topO
 		else if (controlDef["debounce"].get_or(false))
 		{
 			controlDef["debounce"] = false;
+			EatTheMouse();
 			return false;
 		}
 	}
@@ -137,6 +152,7 @@ bool DrawWindowInputControl(sol::table controlDef, int leftOffset = 0, int topOf
 					}
 				}
 				controlDef.set("caret", newCaretPos);
+				evt["handled"] = true;
 				continue;
 			}
 
@@ -195,6 +211,7 @@ void DrawWindow(sol::table windowDef)
 	auto r = Rect(windowDef["box"][1].get<int>(), windowDef["box"][2].get<int>(), windowDef["box"][3].get<int>(), windowDef["box"][4].get<int>());
 	auto title = windowDef["title"].get<std::string>();
 	auto shadow = windowDef["shadow"].get<bool>();
+	auto in = Rect(r);
 
 	currentPort.SetPen(BLACK);
 	if (shadow)
@@ -202,6 +219,8 @@ void DrawWindow(sol::table windowDef)
 		r.Offset(1, 1);
 		FillRect(&r);
 		r.Offset(-1, -1);
+		in.r++;
+		in.b++;
 	}
 	DrawRect(&r);
 	r.Inflate(-1, -1);
@@ -226,6 +245,12 @@ void DrawWindow(sol::table windowDef)
 		topOffset += 12;
 	}
 
+	auto mouseX = 0;
+	auto mouseY = 0;
+	auto mouseB = SDL_GetMouseState(&mouseX, &mouseY);
+	ScaleMouse(&mouseX, &mouseY);
+	auto inside = (mouseX >= in.l && mouseX <= in.r && mouseY >= in.t && mouseY <= in.b);
+
 	//Now draw the controls.
 	auto controls = windowDef["controls"].get<sol::table>();
 	sol::table clicked;
@@ -249,5 +274,9 @@ void DrawWindow(sol::table windowDef)
 		auto maybeClick = clicked["Click"].get<sol::function>();
 		if (maybeClick)
 			maybeClick();
+	}
+	else if (inside)
+	{
+		EatTheMouse();
 	}
 }
