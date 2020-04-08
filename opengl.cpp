@@ -304,23 +304,26 @@ void OpenGL_Initialize()
 	initGLExtensions();
 
 	programIds[0] = 0;
-	if (settings != nullptr)
+	if (settings != nullptr && settings->HasChild("video"))
 	{
 		auto t = settings->AsObject();
-		t = t["video"]->AsObject();
-		auto s = t["shader"];
-		if (s->IsString())
+		if (t["video"]->HasChild("shader"))
 		{
-			programIds[0] = compileProgram(s->AsString().c_str());
-			numShaders = 1;
-		}
-		else if (s->IsArray())
-		{
-			auto a = s->AsArray();
-			numShaders = a.size();
-			for (int i = 0; i < numShaders; i++)
+			t = t["video"]->AsObject();
+			auto s = t["shader"];
+			if (s->IsString())
 			{
-				programIds[i] = compileProgram(a[i]->AsString().c_str());
+				programIds[0] = compileProgram(s->AsString().c_str());
+				numShaders = 1;
+			}
+			else if (s->IsArray())
+			{
+				auto a = s->AsArray();
+				numShaders = a.size();
+				for (int i = 0; i < numShaders; i++)
+				{
+					programIds[i] = compileProgram(a[i]->AsString().c_str());
+				}
 			}
 		}
 	}

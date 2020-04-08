@@ -1,19 +1,21 @@
 currentScene = {
 Initialize = function()
-	LoadSimpleScene("397.png", "397-p.png")
+	LoadSimpleScene("testroom.png", "testroom-p.png")
 
-	iliraView = View.new("ilira.view.json")
-	iliraObject = ViewObj.new(iliraView, 128, 110)
-	otherIli = ViewObj.new(iliraView, 156, 179)
-	table.insert(cast, iliraObject)
-	table.insert(cast, otherIli)
+	egoView = View.new("ego.view.json")
+	egoObject = ViewObj.new(egoView, 128, 180)
+	idView = View.new("id.view.json")
+	idObject = ViewObj.new(idView, 156, 150)
+	table.insert(cast, egoObject)
+	table.insert(cast, idObject)
 
-	iliraObject.cycler = CycleForward
-	otherIli.loop = 8
-	otherIli.cel = 7
-	otherIli.looper = StandAndLook
-	otherIli.target = iliraObject
-	iliX = -64
+	egoObject.cycler = CycleForward
+	idObject.loop = 8
+	idObject.cel = 7
+	idObject.looper = StandAndLook
+	idObject.target = egoObject
+	egoX = -64
+	egoDir = 1
 	
 	myWindow = {
 		visible = true,
@@ -61,30 +63,29 @@ Initialize = function()
 	}
 	table.insert(cast, myWindow)
 
-	backgroundMusic = Audio.new("pq2.ogg")
+	backgroundMusic = Audio.new("beachhouse.ogg")
 	backgroundMusic:Play()
 end,
 
 Tick = function()
-	iliX = iliX + 4
-	if iliX > 340 then iliX = -20 end
-	--[[
-	if iliX < 134 then
-		otherIli.cel = 7
-	elseif iliX < 180 then
-		otherIli.cel = 3
+	if egoDir == 1 then
+		egoX = egoX + 4
+		egoObject.loop = 0
+		if egoX > 270 then egoDir = 0 end
 	else
-		otherIli.cel = 6
+		egoX = egoX - 4
+		egoObject.loop = 1
+		if egoX < -20 then egoDir = 1 end
 	end
-	]]--
-	otherIli:SetHeading(GetAngle(otherIli.x, otherIli.y, iliraObject.x, iliraObject.y))
 
-	iliraObject:Move(iliX, 148)
+	idObject:SetHeading(GetAngle(idObject.x, idObject.y, egoObject.x, egoObject.y))
+
+	egoObject:Move(egoX, egoObject.y)
 		
 	for k, v in pairs(events) do
 		if not v.handled then
 			if v.type == 3 then -- mouse click
-				otherIli:Move(v.x, v.y)
+				idObject:Move(v.x, v.y)
 				v.handled = true
 			elseif v.type == 17 then -- key press
 				if v.scan == 62 then -- F5: Save
@@ -108,12 +109,14 @@ Tick = function()
 end,
 
 Serialize = function()
-	Serializer.SetInteger(iliX)
+	Serializer.SetInteger(egoX)
+	Serializer.SetInteger(egoDir)
 end,
 
 Deserialize = function()
 	currentScene.Initialize()
-	iliX = Serializer.GetInteger()
-	iliraObject:Move(iliX, 148)
+	egoX = Serializer.GetInteger()
+	egoDir = Serializer.GetInteger()
+	egoObject:Move(egoX, 148)
 end
 }

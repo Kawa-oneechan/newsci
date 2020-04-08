@@ -2,12 +2,12 @@
 	"video":
 	{
 		//"screen": [ 320, 200 ],
-		"window": 4, //[ 640, 400 ],
-		"shader": [ "pal-r57shell.fs", "crt.fs" ] //"crt.fs"
+		"window": 3 //[ 640, 400 ],
+		//"shader": [ "pal-r57shell.fs", "crt.fs" ] //"crt.fs"
 	},
 	"sound":
 	{
-		"enabled": true
+		"enabled": false
 	},
 	"input":
 	{
