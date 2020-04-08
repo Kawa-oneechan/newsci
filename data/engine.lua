@@ -118,10 +118,12 @@ ViewObj.new = class(function(v, theView, theX, theY)
 	v.cel = 0
 	v.looper = nil
 	v.cycler = nil
+	v.mover = nil
 	v.Draw = vobDraw
 	v.Update = vobUpdate
 	v.Move = vobMove
 	v.SetHeading = vobSetHeading
+	v.MoveTo = vobMoveTo
 end)
 
 function vobDraw(v)
@@ -130,6 +132,7 @@ end
 
 function vobUpdate(v)
 --	if v.looper then v:looper() end
+	if v.mover then v:mover() end
 	if v.cycler then v:cycler() end
 end
 
@@ -144,6 +147,27 @@ end
 function vobSetHeading(v, heading)
 	if v.looper then v:looper(heading)
 	else DirLoop(v, heading) end
+end
+
+function vobMoveTo(v, x, y)
+	v.moveTargetX = x
+	v.moveTargetY = y
+	v.moveCompleted = false
+	v.moveLastX = 0
+	v.moveLastY = 0
+	v:SetHeading(GetAngle(v.x, v.y, x, y))
+	--InitBresen(v)
+	v.mover = moverMoveTo
+end
+
+function moverMoveTo(v)
+	v.moveLastX = v.x
+	v.moveLastY = v.y
+	--DoBresen(v)
+	if v.x == v.moveTargetX and v.y == v.moveTargetY then
+		v.moveCompleted = true
+		v.mover = nil
+	end
 end
 
 -- ----------------------------------------------- --

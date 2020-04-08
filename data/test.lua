@@ -9,13 +9,14 @@ Initialize = function()
 	table.insert(cast, egoObject)
 	table.insert(cast, idObject)
 
-	egoObject.cycler = CycleForward
+	egoObject.cycler = nil
+	
 	idObject.loop = 8
 	idObject.cel = 7
 	idObject.looper = StandAndLook
 	idObject.target = egoObject
-	egoX = -64
-	egoDir = 1
+--	egoX = -64
+--	egoDir = 1
 	
 	myWindow = {
 		visible = true,
@@ -61,13 +62,14 @@ Initialize = function()
 		Draw = function() DrawWindow(myWindow) end, --this would be abstracted away in a class I guess
 		Update = function() end -- does nothing lol
 	}
-	table.insert(cast, myWindow)
+--	table.insert(cast, myWindow)
 
 	backgroundMusic = Audio.new("beachhouse.ogg")
 	backgroundMusic:Play()
 end,
 
 Tick = function()
+--[[
 	if egoDir == 1 then
 		egoX = egoX + 4
 		egoObject.loop = 0
@@ -77,15 +79,17 @@ Tick = function()
 		egoObject.loop = 1
 		if egoX < -20 then egoDir = 1 end
 	end
+]]--
 
-	idObject:SetHeading(GetAngle(idObject.x, idObject.y, egoObject.x, egoObject.y))
+	-- idObject:SetHeading(GetAngle(idObject.x, idObject.y, egoObject.x, egoObject.y))
 
-	egoObject:Move(egoX, egoObject.y)
+	-- egoObject:Move(egoX, egoObject.y)
 		
 	for k, v in pairs(events) do
 		if not v.handled then
 			if v.type == 3 then -- mouse click
-				idObject:Move(v.x, v.y)
+				-- idObject:Move(v.x, v.y)
+				egoObject:MoveTo(v.x, v.y)
 				v.handled = true
 			elseif v.type == 17 then -- key press
 				if v.scan == 62 then -- F5: Save
@@ -94,20 +98,33 @@ Tick = function()
 				elseif v.scan == 64 then -- F5: Save
 					Serializer.Load("test")
 					v.handled = true
-				--[[ else
+				--[[
+				else
 					local msg = "> sym " .. v.sym .. "\n> mod " .. v.mod .. "\n> scan " .. v.scan .. "\n> "
 					if v.ctrl then msg = msg .. "ctrl " end
 					if v.alt then msg = msg .. "alt " end
 					if v.shift then msg = msg .. "shift " end
 					v.handled = true
 					Message(msg, "Key press!")
+				end
 				]]--
+				elseif v.scan >= 79 and v.scan <= 82 then -- Arrow keys!
+					if v.scan == 79 then -- right
+						egoObject:MoveTo(1000, egoObject.y)
+					elseif v.scan == 80 then -- left
+						egoObject:MoveTo(-1000, egoObject.y)
+					elseif v.scan == 81 then -- down
+						egoObject:MoveTo(egoObject.x, 1000)
+					elseif v.scan == 82 then -- up
+						egoObject:MoveTo(egoObject.x, -1000)
+					end
+					v.handled = true
 				end
 			end
 		end
 	end
 
-	DrawPolys()	
+--	DrawPolys()	
 
 end,
 
