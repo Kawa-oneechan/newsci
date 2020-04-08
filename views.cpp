@@ -73,25 +73,23 @@ void LoadScene(std::string filename)
 	auto pri = root["priority"]->AsString();
 	LoadSimpleScene(vis, pri);
 	auto jsonPolys = root["walkPolys"]->AsArray();
-	std::string lua = "polygons = { ";
+	auto solPolys = Sol["polygons"];
 	for (auto i = 0; i < jsonPolys.size(); i++)
 	{
 		auto thisJP = jsonPolys[i]->AsArray();
 		auto excluding = thisJP[0]->AsBool();
-		lua += fmt::format("{{ {}", excluding);
+		auto thisSP = solPolys[i + 1];
+		thisSP = Sol.create_table();
+		thisSP[1] = excluding;
 		for (auto j = 1, n = 0; j < thisJP.size(); j += 2, n++)
 		{
 			auto x = (int)thisJP[j + 0]->AsNumber();
 			auto y = (int)thisJP[j + 1]->AsNumber();
 			SDL_Log("Poly %d, point %d: %dx%d", i, n, x, y);
-			lua += fmt::format(", {}, {}", x, y);
+			thisSP[j + 1] = x;
+			thisSP[j + 2] = y;
 		}
-		lua += "}";
-		if (i < jsonPolys.size() - 1)
-			lua += ", ";
 	}
-	lua += "}";
-	Lua::RunScript(lua);
 }
 
 void DrawLine(int x1, int y1, int x2, int y2, int color)
