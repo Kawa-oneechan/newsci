@@ -174,7 +174,8 @@ void View::Draw(int loop, int cel, int left, int top, int priority, bool noOffse
 		h = screenHeight - t;
 	if (l < 0)
 	{
-		sx += -l;
+		if (!theLoop.mirror)
+			sx += -l;
 		w -= -l;
 		l = 0;
 	}
@@ -185,16 +186,33 @@ void View::Draw(int loop, int cel, int left, int top, int priority, bool noOffse
 		t = 0;
 	}
 
-	for (auto y = 0; y < h; y++)
+	if (!theLoop.mirror)
 	{
-		for (auto x = 0; x < w; x++)
+		for (auto y = 0; y < h; y++)
 		{
-			auto tx = theLoop.mirror ? left + theCel.w - x : left + x;
-			auto ty = t + y;
-			auto pixel = pixels[((sy + y) * image->width) + (sx + x)];
-			SetPriPixel(tx, ty, pixel, priority);
+			for (auto x = 0; x < w; x++)
+			{
+				auto tx = l + x;
+				auto ty = t + y;
+				auto pixel = pixels[((sy + y) * image->width) + (sx + x)];
+				SetPriPixel(tx, ty, pixel, priority);
+			}
 		}
 	}
+	else
+	{
+		for (auto y = 0; y < h; y++)
+		{
+			for (auto x1 = w - 1, x2 = 0; x1 >= 0; --x1, x2++)
+			{
+				auto tx = l + x2;
+				auto ty = t + y;
+				auto pixel = pixels[((sy + y) * image->width) + (sx + x1)];
+				SetPriPixel(tx, ty, pixel, priority);
+			}
+		}
+	}
+
 }
 
 sol::table View::GetLastSeenRect(int loop, int cel, int left, int top)
