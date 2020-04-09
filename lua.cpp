@@ -196,6 +196,154 @@ int ATan(int x1, int y1, int x2, int y2)
 	return(major);
 }
 
+void InitBresen(sol::table view)
+{
+	int dX, dY, toX, toY, distX, distY, incr, i1, i2, di;
+	int tdX, tdY, watchDog;
+	bool xAxis;
+
+	toX = view["moveTargetX"].get<int>();
+	toY = view["moveTargetY"].get<int>();
+
+	tdX = 2; /* view["stepSizeX"].get<int>(); */
+	tdY = 1; /* view["stepSizeY"].get<int>(); */
+
+	watchDog = (tdX > tdY) ? tdX : tdY;
+	watchDog *= 2;
+
+	// Get distances to be moved.
+	distX = toX - view["x"].get<int>();
+	distY = toY - view["y"].get<int>();
+
+	// Compute basic step sizes
+	while (1)
+	{
+		dX = tdX;
+		dY = tdY;
+		if (labs(distX) >= labs(distY))
+		{
+			// Motion will be along the X axis.
+			xAxis = true;
+			if (distX < 0)
+				dX = -dX;
+			dY = (distX) ? dX * distY / distX : 0;
+		}
+		else
+		{
+			// Major motion is along the Y axis.
+			xAxis = false;
+			if (distY < 0)
+				dY = -dY;
+			dX = (distY) ? dY * distX / distY : 0;
+		}
+
+		// Compute increments and decision variable.
+		i1 = (xAxis) ? 2 * (dX * distY - dY * distX) : 2 * (dY * distX - dX * distY);
+		incr = 1;
+		if ((xAxis && distY < 0) || (!xAxis && distX < 0))
+		{
+			i1 = -i1;
+			incr = -1;
+		}
+
+		i2 = i1 - 2 * ((xAxis) ? distX : distY);
+		di = i1 - ((xAxis) ? distX : distY);
+
+		if ((xAxis && distX < 0) || (!xAxis && distY < 0))
+		{
+			i1 = -i1;
+			i2 = -i2;
+			di = -di;
+		}
+
+		// Limit X step to avoid over-stepping Y step size
+		if (xAxis && tdX > tdY)
+		{
+			if (tdX && labs(dY + incr) > tdY)
+			{
+				if (!(--watchDog))
+					throw new std::string("InitBresen fail.");
+				--tdX;
+				continue;
+			}
+		}
+
+		break;
+	}
+
+	view.set("bresenDX", dX);
+	view.set("bresenDY", dY);
+	view.set("bresenI1", i1);
+	view.set("bresenI2", i2);
+	view.set("bresenDI", di);
+	view.set("bresenIn", incr);
+	view.set("bresenXA", xAxis);
+}
+
+void DoBresen(sol::table view)
+{
+	int x, y, toX, toY, i1, i2, di, si1, si2, sdi;
+	int dX, dY, incr;
+	bool xAxis;
+	int lastX, lastY;
+
+	lastX = x = view["x"].get<int>();
+	lastY = y = view["y"].get<int>();
+	toX = view["moveTargetX"].get<int>();
+	toY = view["moveTargetY"].get<int>();
+	xAxis = view["bresenXA"].get<bool>();
+	dX = view["bresenDX"].get<int>();
+	dY = view["bresenDY"].get<int>();
+	incr = view["bresenIn"].get<int>();
+	si1 = i1 = view["bresenI1"].get<int>();
+	si2 = i2 = view["bresenI2"].get<int>();
+	sdi = di = view["bresenDI"].get<int>();
+
+	view.set("moveLastX", x);
+	view.set("moveLastX", y);
+
+	if ((xAxis && (labs(toX - x) <= labs(dX))) || (!xAxis && (labs(toY - y) <= labs(dY))))
+	{
+		// We're within a step size of the destination -- set client's x & y to it.
+		x = toX;
+		y = toY;
+	}
+	else
+	{
+		// Move one step.
+		x += dX;
+		y += dY;
+		if (di < 0)
+			di += i1;
+		else
+		{
+			di += i2;
+			if (xAxis)
+				y += incr;
+			else
+				x += incr;
+		}
+	}
+
+	view.set("x", x);
+	view.set("y", y);
+
+	if (0) // if(CantBeHere(view))
+	{
+		view.set("x", lastX);
+		view.set("y", lastY);
+
+		i1 = si1;
+		i2 = si2;
+		di = sdi;
+		// Set blocked state
+	}
+
+	view.set("bresenI1", i1);
+	view.set("bresenI2", i2);
+	view.set("bresenDI", di);
+}
+
 // End stolen goods
 
 
@@ -213,6 +361,8 @@ void Lua::Initialize()
 	Sol.set_function("ShowScreen", [](int screenID) { shownBuffer = (screenID == 0) ? visualBuffer : priorityBuffer; });
 	Sol.set_function("DrawWindow", DrawWindow);
 	Sol.set_function("ATan", ATan);
+	Sol.set_function("InitBresen", InitBresen);
+	Sol.set_function("DoBresen", DoBresen);
 }
 
 void Lua::RunScript(std::string script)

@@ -9,7 +9,7 @@ Initialize = function()
 	table.insert(cast, egoObject)
 	table.insert(cast, idObject)
 
-	egoObject.cycler = nil
+	egoObject.looper = StopWalk
 	
 	idObject.loop = 8
 	idObject.cel = 7

@@ -116,6 +116,9 @@ ViewObj.new = class(function(v, theView, theX, theY)
 	v.pri = v.y
 	v.loop = 0
 	v.cel = 0
+	v.heading = 0
+	v.cycleTime = 0
+	v.cycleSpeed = 1
 	v.looper = nil
 	v.cycler = nil
 	v.mover = nil
@@ -131,7 +134,7 @@ function vobDraw(v)
 end
 
 function vobUpdate(v)
---	if v.looper then v:looper() end
+	if v.looper then v:looper() end
 	if v.mover then v:mover() end
 	if v.cycler then v:cycler() end
 end
@@ -145,8 +148,10 @@ function vobMove(v, theX, theY)
 end
 
 function vobSetHeading(v, heading)
-	if v.looper then v:looper(heading)
-	else DirLoop(v, heading) end
+	v.heading = heading
+	--if v.looper then v:looper(heading)
+	--else DirLoop(v, heading) end
+	DirLoop(v, heading)
 end
 
 function vobMoveTo(v, x, y)
@@ -156,17 +161,22 @@ function vobMoveTo(v, x, y)
 	v.moveLastX = 0
 	v.moveLastY = 0
 	v:SetHeading(GetAngle(v.x, v.y, x, y))
-	--InitBresen(v)
+	InitBresen(v)
 	v.mover = moverMoveTo
+	v.moving = true
 end
 
 function moverMoveTo(v)
 	v.moveLastX = v.x
 	v.moveLastY = v.y
-	--DoBresen(v)
+	DoBresen(v)
+	if v.pri ~= -1 then
+		v.pri = v.y
+	end
 	if v.x == v.moveTargetX and v.y == v.moveTargetY then
 		v.moveCompleted = true
 		v.mover = nil
+		v.moving = false
 	end
 end
 
@@ -178,22 +188,50 @@ function StandAndLook(v, angle)
 	-- given a v.target, sets view to match angle hopefully
 	-- requires a non-nil v.target and loop to be 8
 	if v.target == nil then return end
-	DirLoop(v, angle)
+	-- DirLoop(v, angle)
 	local cel = v.loop
 	v.loop = 8
 	v.cel = cel
 end
 
 function CycleForward(v)
+	if v.cycleTime < v.cycleSpeed then
+		v.cycleTime = v.cycleTime + 1
+		return
+	else
+		v.cycleTime = 0
+	end
 	local cel = v.cel + 1
 	if cel == v.view:GetNumCels(v.loop) then cel = 0 end
 	v.cel = cel
 end
 
 function CycleBackward(v)
+	if v.cycleTime < v.cycleSpeed then
+		v.cycleTime = v.cycleTime + 1
+		return
+	else
+		v.cycleTime = 0
+	end
 	local cel = v.cel
 	if cel == 0 then cel = v.view:GetNumCels(v.loop) end
 	v.cel = cel - 1
+end
+
+function StopWalk(v)
+	if v.heading == nil then
+		Message("stopwalk: heading is nil")
+		v.heading = 0
+	end
+	DirLoop(v, v.heading)
+	if v.moving then
+		v.cycler = CycleForward
+	else
+		v.cycler = nil
+		local cel = v.loop
+		v.loop = 8
+		v.cel = cel
+	end
 end
 
 -- ----------------------------------------------- --
