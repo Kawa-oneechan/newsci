@@ -129,6 +129,31 @@ void DrawPolys()
 	}
 }
 
+void Tint(Color *pixel, int r, int g, int b, int a)
+{
+	if (r + g + b + a == 0)
+		return;
+	int nR = ((*pixel >> 0) & 0xFF);
+	int nG = ((*pixel >> 8) & 0xFF);
+	int nB = ((*pixel >> 16) & 0xFF);
+	int nA = ((*pixel >> 24) & 0xFF);
+	if (nA == 0)
+		return;
+	nR += r;
+	nG += g;
+	nB += b;
+	nA += a;
+	if (nR < 0) nR = 0;
+	if (nG < 0) nG = 0;
+	if (nB < 0) nB = 0;
+	if (nA < 0) nA = 0;
+	if (nR > 255) nR = 255;
+	if (nG > 255) nG = 255;
+	if (nB > 255) nB = 255;
+	if (nA > 255) nA = 255;
+	*pixel = (nA << 24) | (nB << 16) | (nG << 8) | (nR << 0);
+}
+
 void View::Initialize()
 {
 	Sol.new_usertype<View>(
@@ -144,7 +169,7 @@ void View::Initialize()
 	Sol.set_function("DrawPolys", DrawPolys);
 }
 
-void View::Draw(int loop, int cel, int left, int top, int priority, bool noOffset)
+void View::Draw(int loop, int cel, int left, int top, int priority, bool noOffset, int tintR, int tintG, int tintB, int tintA)
 {
 	auto image = this->image;
 	auto pixels = image->pixels;
@@ -194,6 +219,7 @@ void View::Draw(int loop, int cel, int left, int top, int priority, bool noOffse
 				auto tx = l + x;
 				auto ty = t + y;
 				auto pixel = pixels[((sy + y) * image->width) + (sx + x)];
+				Tint(&pixel, tintR, tintG, tintB, tintA);
 				SetPriPixel(tx, ty, pixel, priority);
 			}
 		}
@@ -207,6 +233,7 @@ void View::Draw(int loop, int cel, int left, int top, int priority, bool noOffse
 				auto tx = l + x2;
 				auto ty = t + y;
 				auto pixel = pixels[((sy + y) * image->width) + (sx + x1)];
+				Tint(&pixel, tintR, tintG, tintB, tintA);
 				SetPriPixel(tx, ty, pixel, priority);
 			}
 		}

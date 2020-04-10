@@ -10,6 +10,7 @@ Initialize = function()
 	table.insert(cast, idObject)
 
 	egoObject.looper = StopWalk
+	egoObject.tint = { 64, -32, -64, -64 }
 	
 	idObject.loop = 8
 	idObject.cel = 7
