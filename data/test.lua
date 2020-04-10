@@ -109,14 +109,20 @@ Tick = function()
 				end
 				]]--
 				elseif v.scan >= 79 and v.scan <= 82 then -- Arrow keys!
-					if v.scan == 79 then -- right
-						egoObject:MoveTo(1000, egoObject.y)
-					elseif v.scan == 80 then -- left
-						egoObject:MoveTo(-1000, egoObject.y)
-					elseif v.scan == 81 then -- down
-						egoObject:MoveTo(egoObject.x, 1000)
-					elseif v.scan == 82 then -- up
-						egoObject:MoveTo(egoObject.x, -1000)
+					if egoObject.walkDir == v.scan then
+						egoObject:Stop()
+						egoObject.walkDir = 0
+					else
+						if v.scan == 79 then -- right
+							egoObject:MoveTo(1000, egoObject.y)
+						elseif v.scan == 80 then -- left
+							egoObject:MoveTo(-1000, egoObject.y)
+						elseif v.scan == 81 then -- down
+							egoObject:MoveTo(egoObject.x, 1000)
+						elseif v.scan == 82 then -- up
+							egoObject:MoveTo(egoObject.x, -1000)
+						end
+						egoObject.walkDir = v.scan
 					end
 					v.handled = true
 				end

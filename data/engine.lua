@@ -119,6 +119,7 @@ ViewObj.new = class(function(v, theView, theX, theY)
 	v.heading = 0
 	v.cycleTime = 0
 	v.cycleSpeed = 1
+	v.walkDir = 0
 	v.looper = nil
 	v.cycler = nil
 	v.mover = nil
@@ -127,6 +128,7 @@ ViewObj.new = class(function(v, theView, theX, theY)
 	v.Move = vobMove
 	v.SetHeading = vobSetHeading
 	v.MoveTo = vobMoveTo
+	v.Stop = vobStop
 end)
 
 function vobDraw(v)
@@ -152,6 +154,12 @@ function vobSetHeading(v, heading)
 	--if v.looper then v:looper(heading)
 	--else DirLoop(v, heading) end
 	DirLoop(v, heading)
+end
+
+function vobStop(v)
+	v.mover = nil
+	v.moving = false
+	v.moveCompleted = true
 end
 
 function vobMoveTo(v, x, y)
