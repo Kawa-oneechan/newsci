@@ -1,5 +1,4 @@
 #include "NewSCI.h"
-#include "support/fmt/format.h"
 
 extern void Message(std::string text, std::string title);
 extern SDL_Window* sdlWindow;
@@ -91,37 +90,43 @@ void ScaleMouse(signed int *x, signed int *y)
 void HandleEvents()
 {
 	SDL_Event ev;
+	auto solEvents = Sol["events"].get<sol::table>();
+	auto thisEvent = solEvents[solEvents.size()];
+	thisEvent = Sol.create_table();
 	while (SDL_PollEvent(&ev) != 0)
 	{
 		switch (ev.type)
 		{
 		case SDL_QUIT:
-			Lua::RunScript("quit = true");
+			Sol["quit"] = true;
 			break;
 		case SDL_MOUSEMOTION:
 			ScaleMouse(&ev.motion.x, &ev.motion.y);
-			Lua::RunScript(fmt::format("table.insert(events, {{ type = 1, x = {}, y = {} }})", ev.motion.x, ev.motion.y));
+			thisEvent["type"] = 1;
+			thisEvent["x"] = ev.motion.x;
+			thisEvent["y"] = ev.motion.y;
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 		case SDL_MOUSEBUTTONUP:
 			ScaleMouse(&ev.motion.x, &ev.motion.y);
-			Lua::RunScript(fmt::format("table.insert(events, {{ type = {}, button = {}, x = {}, y = {} }})", (ev.type == SDL_MOUSEBUTTONDOWN) ? 2 : 3,
-				ev.button.button, ev.button.x, ev.button.y));
+			thisEvent["type"] = (ev.type == SDL_MOUSEBUTTONDOWN) ? 2 : 3;
+			thisEvent["button"] = ev.button.button;
+			thisEvent["x"] = ev.button.x;
+			thisEvent["y"] = ev.button.y;
 			break;
 		case SDL_KEYDOWN:
 		case SDL_KEYUP:
 			int code = keytranslation[ev.key.keysym.sym] + ((ev.key.keysym.mod & KMOD_SHIFT) ? 128 : 0);
 			code = scan2ascii[code];
-			Lua::RunScript(fmt::format("table.insert(events, {{ type = {}, sym = \"{}\", mod = {}, scan = {}, shift = {}, ctrl = {}, alt = {}, rawsym = {}, char = {} }})",
-				(ev.type == SDL_KEYDOWN) ? 16 : 17,
-				SDL_GetKeyName(ev.key.keysym.sym),
-				ev.key.keysym.mod & ~KMOD_NUM,
-				ev.key.keysym.scancode,
-				(ev.key.keysym.mod & KMOD_SHIFT) ? "true" : "false",
-				(ev.key.keysym.mod & KMOD_CTRL) ? "true" : "false",
-				(ev.key.keysym.mod & KMOD_ALT) ? "true" : "false",
-				ev.key.keysym.sym,
-				code));
+			thisEvent["type"] = (ev.type == SDL_KEYDOWN) ? 16 : 17;
+			thisEvent["sym"] = SDL_GetKeyName(ev.key.keysym.sym);
+			thisEvent["mod"] = ev.key.keysym.mod & ~KMOD_NUM;
+			thisEvent["scan"] = ev.key.keysym.scancode;
+			thisEvent["shift"] = (ev.key.keysym.mod & KMOD_SHIFT);
+			thisEvent["ctrl"] = (ev.key.keysym.mod & KMOD_CTRL);
+			thisEvent["alt"] = (ev.key.keysym.mod & KMOD_ALT);
+			thisEvent["rawsym"] = ev.key.keysym.sym;
+			thisEvent["char"] = code;
 			break;
 		}
 	}
