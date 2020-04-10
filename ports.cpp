@@ -1,5 +1,4 @@
 #include "NewSCI.h"
-#include "support/fmt/format.h"
 
 Port mainPort, currentPort;
 std::map<int, Font*> fonts;
@@ -35,8 +34,12 @@ void Port::SetFont(int fontNum)
 		SetFont(f);
 	}
 	catch (std::out_of_range) //Wasn't there. Try loading it.
-	{		
-		Font* f = Font::Load(fmt::format("{0}.fon", fontNum));
+	{
+		char n[4];
+		_itoa_s(fontNum, n, 4, 10);
+		std::string fn = n;
+		fn += ".fon";
+		Font* f = Font::Load(fn);
 		if (f)
 		{
 			fonts[fontNum] = f;

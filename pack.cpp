@@ -1,6 +1,5 @@
 #include "NewSCI.h"
 #include <SDL_messagebox.h>
-#include "support/fmt/format.h"
 
 namespace Pack
 {
@@ -15,7 +14,8 @@ namespace Pack
 
 		if (fopen_s(&packFileHd, packFileName.c_str(), "rb") != 0)
 		{
-			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "NewSCI", fmt::format("Could not load resource pak \"{}\".", packFileName).c_str(), NULL);
+			std::string err = "Could not load resource pack \"" + packFileName + "\".";
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "NewSCI", err.c_str(), NULL);
 			exit(1);
 		}
 		fread(&signature, sizeof(Uint32), 1, packFileHd);

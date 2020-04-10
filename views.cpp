@@ -1,5 +1,4 @@
 #include "NewSCI.h"
-#include "support/fmt/format.h"
 
 View::View(std::string filename)
 {
@@ -74,14 +73,14 @@ void LoadScene(std::string filename)
 	LoadSimpleScene(vis, pri);
 	auto jsonPolys = root["walkPolys"]->AsArray();
 	auto solPolys = Sol["polygons"];
-	for (auto i = 0; i < jsonPolys.size(); i++)
+	for (auto i = 0u; i < jsonPolys.size(); i++)
 	{
 		auto thisJP = jsonPolys[i]->AsArray();
 		auto excluding = thisJP[0]->AsBool();
 		auto thisSP = solPolys[i + 1];
 		thisSP = Sol.create_table();
 		thisSP[1] = excluding;
-		for (auto j = 1, n = 0; j < thisJP.size(); j += 2, n++)
+		for (auto j = 1u, n = 0u; j < thisJP.size(); j += 2, n++)
 		{
 			auto x = (int)thisJP[j + 0]->AsNumber();
 			auto y = (int)thisJP[j + 1]->AsNumber();
@@ -116,7 +115,7 @@ void DrawPolys()
 		auto lastX = -1, lastY = -1;
 		auto poly = pkv.second.as<sol::table>();
 		auto excluding = poly[1].get<bool>();
-		for (auto i = 2, j = 0; i < poly.size(); i += 2, j++)
+		for (auto i = 2u, j = 0u; i < poly.size(); i += 2, j++)
 		{
 			auto x = poly[i + 0].get<int>();
 			auto y = poly[i + 1].get<int>();
