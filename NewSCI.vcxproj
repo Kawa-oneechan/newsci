@@ -44,7 +44,7 @@
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(ProjectDir)support\fmod;$(ProjectDir)support\lua;$(ProjectDir)support\sdl2;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)support\fmod;$(ProjectDir)support\sdl2;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)</OutDir>
+    <OutDir>$(SolutionDir)\out\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -65,12 +65,18 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;fmodex_vc.lib;lua53.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winmm.lib;shell32.lib;uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <OutputFile>$(ProjectDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile>$(ProjectDir)\out\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PreBuildEvent>
       <Command>packer.exe</Command>
       <Message>Pack up your shit</Message>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>copy /Y fmodex.dll out
+copy /Y lua53.dll out
+copy /Y SDL2.dll out
+move /Y resource.nws out</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -89,12 +95,18 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opengl32.lib;fmodex_vc.lib;lua53.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winmm.lib;shell32.lib;uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <OutputFile>$(ProjectDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile>$(ProjectDir)\out\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PreBuildEvent>
       <Command>packer.exe</Command>
       <Message>Pack up your shit</Message>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>copy /Y fmodex.dll out
+copy /Y lua53.dll out
+copy /Y SDL2.dll out
+move /Y resource.nws out</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="controls.cpp" />
