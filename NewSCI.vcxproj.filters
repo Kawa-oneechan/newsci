@@ -204,18 +204,6 @@
     <ClInclude Include="audio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="support\fmod.h">
-      <Filter>Support Files\fmod</Filter>
-    </ClInclude>
-    <ClInclude Include="support\fmod_errors.h">
-      <Filter>Support Files\fmod</Filter>
-    </ClInclude>
-    <ClInclude Include="support\fmod.hpp">
-      <Filter>Support Files\fmod</Filter>
-    </ClInclude>
-    <ClInclude Include="support\fmod_dsp.h">
-      <Filter>Support Files\fmod</Filter>
-    </ClInclude>
     <ClInclude Include="support\lua\lzio.h">
       <Filter>Support Files\lua</Filter>
     </ClInclude>
@@ -410,6 +398,18 @@
     </ClInclude>
     <ClInclude Include="support\sdl2\SDL_version.h">
       <Filter>Support Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="support\fmod\fmod.h">
+      <Filter>Support Files\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="support\fmod\fmod.hpp">
+      <Filter>Support Files\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="support\fmod\fmod_dsp.h">
+      <Filter>Support Files\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="support\fmod\fmod_errors.h">
+      <Filter>Support Files\fmod</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
