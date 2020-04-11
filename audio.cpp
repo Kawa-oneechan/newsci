@@ -3,11 +3,12 @@
 
 FMOD::System* Audio::system;
 std::vector<Audio*> Audio::playing;
-bool soundEnabled = true;
+bool audioEnabled = true;
+float musicVolume = 1.0f, soundVolume = 1.0f;
 
 void Audio::Initialize()
 {
-	if (soundEnabled)
+	if (audioEnabled)
 	{
 		auto r = FMOD::System_Create(&system);
 		r = system->init(4, FMOD_INIT_NORMAL, NULL);
@@ -40,7 +41,7 @@ Audio::Audio(std::string filename)
 	this->status = -1;
 	unsigned long size = 0;
 	this->filename = std::string(filename);
-	if (!soundEnabled)
+	if (!audioEnabled)
 	{
 		this->status = 0;
 		return;
@@ -76,7 +77,7 @@ Audio::Audio(std::string filename)
 Audio::~Audio()
 {
 	this->Stop();
-	if (soundEnabled)
+	if (audioEnabled)
 		this->theSound->release();
 	this->theChannel = NULL;
 	this->theSound = NULL;
@@ -86,11 +87,12 @@ void Audio::Play()
 {
 	if (this->status == 0)
 	{
-		if (soundEnabled)
+		if (audioEnabled)
 		{
 			auto r = system->playSound(FMOD_CHANNEL_FREE, this->theSound, false, &this->theChannel);
 			if (r != FMOD_OK)
 				throw "Could not play stream.";
+			this->theChannel->setVolume(musicVolume);
 		}
 		Audio::playing.push_back(this);
 	}
@@ -103,7 +105,7 @@ void Audio::Play()
 
 void Audio::Pause()
 {
-	if (soundEnabled)
+	if (audioEnabled)
 		this->theChannel->setPaused(true);
 	this->status = 2;
 }
@@ -112,7 +114,7 @@ void Audio::Stop()
 {
 	if (this->status != 0)
 	{
-		if (soundEnabled)
+		if (audioEnabled)
 			this->theChannel->stop();
 	}
 	this->status = 0;
@@ -122,7 +124,7 @@ void Audio::Stop()
 void Audio::Serialize()
 {
 	unsigned int pos = 0;
-	if (soundEnabled)
+	if (audioEnabled)
 		this->theChannel->getPosition(&pos, FMOD_TIMEUNIT_PCM);
 	Serializer::SetInteger(this->status);
 	Serializer::SetInteger(pos);
@@ -134,7 +136,7 @@ void Audio::Deserialize()
 	unsigned int pos = Serializer::GetInteger();
 	switch (status)
 	{
-	case 0: 
+	case 0:
 		this->Stop();
 		return;
 	case 1:
@@ -144,6 +146,6 @@ void Audio::Deserialize()
 		this->Play();
 		this->Pause();
 	}
-	if (status && soundEnabled)
+	if (status && audioEnabled)
 		this->theChannel->setPosition(pos, FMOD_TIMEUNIT_PCM);
 }

@@ -13,7 +13,8 @@ int cursorHotX = 0, cursorHotY = 0;
 Pixels shownBuffer;
 
 extern Pixels visualBackground, priorityBackground;
-extern bool soundEnabled;
+extern bool audioEnabled;
+extern float musicVolume, soundVolume;
 extern char scan2ascii[];
 
 extern void OpenGL_Present();
@@ -163,11 +164,22 @@ int main(int argc, char*argv[])
 					}
 				}
 			}
-			if (settings->HasChild("sound"))
+			if (settings->HasChild("audio"))
 			{
-				auto sound = root["sound"]->AsObject();
-				if (root["sound"]->HasChild("enabled"))
-					soundEnabled = sound["enabled"]->AsBool();
+				auto audio = root["audio"]->AsObject();
+				if (root["audio"]->HasChild("enabled"))
+					audioEnabled = audio["enabled"]->AsBool();
+				if (root["audio"]->HasChild("volume"))
+				{
+					if (audio["volume"]->IsNumber())
+						musicVolume = soundVolume = (float)audio["volume"]->AsNumber();
+					else if (audio["volume"]->IsArray())
+					{
+						auto vol = audio["volume"]->AsArray();
+						musicVolume = (float)vol[0]->AsNumber();
+						soundVolume = (float)vol[0]->AsNumber();
+					}
+				}
 			}
 			if (settings->HasChild("input"))
 			{

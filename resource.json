@@ -1,16 +1,30 @@
 {
 	"video":
 	{
-		//"screen": [ 320, 200 ],
-		"window": 3 //[ 640, 400 ],
-		//"shader": [ "pal-r57shell.fs", "crt.fs" ] //"crt.fs"
+		/* screen: array of two integers, defaults to [ 320, 200 ].
+		 * window: either an array of two integers OR a single integer.
+		 *         defaults to match screen.
+		 *         if an integer, is a multiplier.
+		 * shader: either a single string filename, or an array of them.
+		 *         defaults to none.
+		 */
+		"window": 3
 	},
-	"sound":
+	"audio":
 	{
-		"enabled": false
+		/* enabled: boolean.
+		 * volume: array of two floats OR a single float.
+		 *         sets music and sound volumes, or both at once.
+		 *         defaults to [ 1.0, 1.0 ]
+		 */
+		"enabled": true,
+		"volume": 0.5
 	},
 	"input":
 	{
+		/* keymap: string matching one of the .key files in the pack.
+		 * joypad: boolean.
+		 */
 		"keymap": "american",
 		"joypad": false
 	}
