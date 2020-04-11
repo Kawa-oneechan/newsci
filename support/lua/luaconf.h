@@ -48,13 +48,13 @@
 ** By default, Lua on Windows use (some) specific Windows features
 */
 #if !defined(LUA_USE_C89) && defined(_WIN32) && !defined(_WIN32_WCE)
-//#define LUA_USE_WINDOWS  /* enable goodies for regular Windows */
+#define LUA_USE_WINDOWS  /* enable goodies for regular Windows */
 #endif
 
 
 #if defined(LUA_USE_WINDOWS)
-//#define LUA_DL_DLL	/* enable support for DLL */
-//#define LUA_USE_C89	/* broadly, Windows is C89 */
+#define LUA_DL_DLL	/* enable support for DLL */
+#define LUA_USE_C89	/* broadly, Windows is C89 */
 #endif
 
 
@@ -196,7 +196,8 @@
 #define LUA_CPATH_DEFAULT \
 		LUA_CDIR"?.dll;" \
 		LUA_CDIR"..\\lib\\lua\\" LUA_VDIR "\\?.dll;" \
-		LUA_CDIR"loadall.dll;" ".\\?.dll"
+		LUA_CDIR"loadall.dll;" ".\\?.dll;" \
+		LUA_CDIR"?53.dll;" ".\\?53.dll"
 
 #else			/* }{ */
 
@@ -208,7 +209,8 @@
 		LUA_CDIR"?.lua;"  LUA_CDIR"?/init.lua;" \
 		"./?.lua;" "./?/init.lua"
 #define LUA_CPATH_DEFAULT \
-		LUA_CDIR"?.so;" LUA_CDIR"loadall.so;" "./?.so"
+		LUA_CDIR"?.so;" LUA_CDIR"loadall.so;" "./?.so;" \
+		LUA_CDIR"lib?53.so;" "./lib?53.so"
 #endif			/* } */
 
 

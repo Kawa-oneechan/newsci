@@ -51,105 +51,6 @@
     <ClCompile Include="audio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="support\lua\lapi.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lauxlib.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lbaselib.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lbitlib.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lcode.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lcorolib.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lctype.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\ldblib.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\ldebug.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\ldo.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\ldump.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lfunc.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lgc.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\linit.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\liolib.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\llex.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lmathlib.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lmem.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\loadlib.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lobject.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lopcodes.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\loslib.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lparser.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lstate.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lstring.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lstrlib.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\ltable.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\ltablib.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\ltm.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lundump.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lutf8lib.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lvm.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
-    <ClCompile Include="support\lua\lzio.c">
-      <Filter>Support Files\lua</Filter>
-    </ClCompile>
     <ClCompile Include="lua.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -203,81 +104,6 @@
     </ClInclude>
     <ClInclude Include="audio.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lzio.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lapi.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lauxlib.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lcode.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lctype.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\ldebug.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\ldo.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lfunc.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lgc.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\llex.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\llimits.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lmem.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lobject.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lopcodes.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lparser.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lprefix.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lstate.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lstring.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\ltable.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\ltm.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lua.hpp">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\luaconf.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lualib.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lundump.h">
-      <Filter>Support Files\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="support\lua\lvm.h">
-      <Filter>Support Files\lua</Filter>
     </ClInclude>
     <ClInclude Include="lua.h">
       <Filter>Header Files</Filter>
@@ -410,6 +236,21 @@
     </ClInclude>
     <ClInclude Include="support\fmod\fmod_errors.h">
       <Filter>Support Files\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lauxlib.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lua.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lua.hpp">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\luaconf.h">
+      <Filter>Support Files\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="support\lua\lualib.h">
+      <Filter>Support Files\lua</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

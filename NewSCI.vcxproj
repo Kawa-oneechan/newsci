@@ -42,14 +42,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(ProjectDir)support\fmod;$(ProjectDir)support\sdl2;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)support\fmod;$(ProjectDir)support\lua;$(ProjectDir)support\sdl2;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)support\fmod;$(ProjectDir)support\sdl2;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)support\fmod;$(ProjectDir)support\sdl2;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)support\fmod;$(ProjectDir)support\sdl2;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)support\fmod;$(ProjectDir)support\lua;$(ProjectDir)support\sdl2;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -63,7 +63,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;fmodex_vc.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winmm.lib;shell32.lib;uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;fmodex_vc.lib;lua53.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winmm.lib;shell32.lib;uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <OutputFile>$(ProjectDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
@@ -87,7 +87,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;fmodex_vc.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winmm.lib;shell32.lib;uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;fmodex_vc.lib;lua53.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winmm.lib;shell32.lib;uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <OutputFile>$(ProjectDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
@@ -110,39 +110,6 @@
     <ClCompile Include="serializer.cpp" />
     <ClCompile Include="support\json\JSON.cpp" />
     <ClCompile Include="support\json\JSONValue.cpp" />
-    <ClCompile Include="support\lua\lapi.c" />
-    <ClCompile Include="support\lua\lauxlib.c" />
-    <ClCompile Include="support\lua\lbaselib.c" />
-    <ClCompile Include="support\lua\lbitlib.c" />
-    <ClCompile Include="support\lua\lcode.c" />
-    <ClCompile Include="support\lua\lcorolib.c" />
-    <ClCompile Include="support\lua\lctype.c" />
-    <ClCompile Include="support\lua\ldblib.c" />
-    <ClCompile Include="support\lua\ldebug.c" />
-    <ClCompile Include="support\lua\ldo.c" />
-    <ClCompile Include="support\lua\ldump.c" />
-    <ClCompile Include="support\lua\lfunc.c" />
-    <ClCompile Include="support\lua\lgc.c" />
-    <ClCompile Include="support\lua\linit.c" />
-    <ClCompile Include="support\lua\liolib.c" />
-    <ClCompile Include="support\lua\llex.c" />
-    <ClCompile Include="support\lua\lmathlib.c" />
-    <ClCompile Include="support\lua\lmem.c" />
-    <ClCompile Include="support\lua\loadlib.c" />
-    <ClCompile Include="support\lua\lobject.c" />
-    <ClCompile Include="support\lua\lopcodes.c" />
-    <ClCompile Include="support\lua\loslib.c" />
-    <ClCompile Include="support\lua\lparser.c" />
-    <ClCompile Include="support\lua\lstate.c" />
-    <ClCompile Include="support\lua\lstring.c" />
-    <ClCompile Include="support\lua\lstrlib.c" />
-    <ClCompile Include="support\lua\ltable.c" />
-    <ClCompile Include="support\lua\ltablib.c" />
-    <ClCompile Include="support\lua\ltm.c" />
-    <ClCompile Include="support\lua\lundump.c" />
-    <ClCompile Include="support\lua\lutf8lib.c" />
-    <ClCompile Include="support\lua\lvm.c" />
-    <ClCompile Include="support\lua\lzio.c" />
     <ClCompile Include="support\picopng.cpp" />
     <ClCompile Include="views.cpp" />
   </ItemGroup>
@@ -168,31 +135,11 @@
     <ClInclude Include="support\fmod\fmod_errors.h" />
     <ClInclude Include="support\json\JSON.h" />
     <ClInclude Include="support\json\JSONValue.h" />
-    <ClInclude Include="support\lua\lapi.h" />
     <ClInclude Include="support\lua\lauxlib.h" />
-    <ClInclude Include="support\lua\lcode.h" />
-    <ClInclude Include="support\lua\lctype.h" />
-    <ClInclude Include="support\lua\ldebug.h" />
-    <ClInclude Include="support\lua\ldo.h" />
-    <ClInclude Include="support\lua\lfunc.h" />
-    <ClInclude Include="support\lua\lgc.h" />
-    <ClInclude Include="support\lua\llex.h" />
-    <ClInclude Include="support\lua\llimits.h" />
-    <ClInclude Include="support\lua\lmem.h" />
-    <ClInclude Include="support\lua\lobject.h" />
-    <ClInclude Include="support\lua\lopcodes.h" />
-    <ClInclude Include="support\lua\lparser.h" />
-    <ClInclude Include="support\lua\lprefix.h" />
-    <ClInclude Include="support\lua\lstate.h" />
-    <ClInclude Include="support\lua\lstring.h" />
-    <ClInclude Include="support\lua\ltable.h" />
-    <ClInclude Include="support\lua\ltm.h" />
+    <ClInclude Include="support\lua\lua.h" />
     <ClInclude Include="support\lua\lua.hpp" />
     <ClInclude Include="support\lua\luaconf.h" />
     <ClInclude Include="support\lua\lualib.h" />
-    <ClInclude Include="support\lua\lundump.h" />
-    <ClInclude Include="support\lua\lvm.h" />
-    <ClInclude Include="support\lua\lzio.h" />
     <ClInclude Include="support\sdl2\begin_code.h" />
     <ClInclude Include="support\sdl2\close_code.h" />
     <ClInclude Include="support\sdl2\SDL.h" />
