@@ -113,12 +113,19 @@ bool JSON::SkipWhitespace(const char **data)
 		else if (**data == L'*')
 		{
 			(*data)++;
-			while (**data != 0 && **data == L'*')
+			while (**data != 0)
 			{
 				(*data)++;
-				if (**data == L'/')
+				if (**data == L'*')
+				{
 					(*data)++;
-				SkipWhitespace(data);
+					if (**data == L'/')
+					{
+						(*data)++;
+						SkipWhitespace(data);
+						break;
+					}
+				}
 			}
 		}
 	}
