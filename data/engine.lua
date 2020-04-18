@@ -119,6 +119,8 @@ ViewObj.new = class(function(v, theView, theX, theY)
 	v.heading = 0
 	v.cycleTime = 0
 	v.cycleSpeed = 1
+	v.scaleX = 128
+	v.scaleY = 128
 	v.walkDir = 0
 	v.looper = nil
 	v.cycler = nil
@@ -132,7 +134,7 @@ ViewObj.new = class(function(v, theView, theX, theY)
 end)
 
 function vobDraw(v)
-	v.view:Draw(v.loop, v.cel, v.x, v.y, v.pri, false)
+	v.view:Draw(v.loop, v.cel, v.x, v.y, v.pri, v.scaleX, v.scaleY, false)
 end
 
 function vobUpdate(v)

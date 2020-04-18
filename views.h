@@ -24,7 +24,7 @@ struct View
 public:
 	static void Initialize();
 	View(std::string filename);
-	void Draw(int loop, int cel, int left, int top, int priority, bool noOffset);
+	void View::Draw(int loop, int cel, int left, int top, int priority, int scaleX, int scaleY, bool noOffset);
 	sol::table GetLastSeenRect(int loop, int cel, int left, int top);
 	int GetNumLoops();
 	int GetNumCels(int loop);

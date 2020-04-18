@@ -66,6 +66,8 @@ inline void SetPixel(int X, int Y, Color C)
 {
 	if ((C) >> 24 == 0)
 		return;
+	if ((X) < 0 || (X) >= screenWidth || (Y) < 0 || (Y) >= screenHeight)
+		return;
 	const auto place = ((Y) * screenWidth) + (X);
 	if ((C) >> 24 == 0xFF)
 		visualBuffer[place] = (C);
@@ -88,6 +90,8 @@ inline void SetPixel(int X, int Y, Color C)
 
 inline void SetPriPixel(int X, int Y, int C, int pri)
 {
+	if ((X) < 0 || (X) >= screenWidth || (Y) < 0 || (Y) >= screenHeight)
+		return;
 	auto priHere = (int)priorityBuffer[(Y * screenWidth) + X] & 0xFF;
 	if (pri > -1 && priHere > pri)
 		return;

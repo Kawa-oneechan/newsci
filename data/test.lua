@@ -10,7 +10,9 @@ Initialize = function()
 	table.insert(cast, idObject)
 
 	egoObject.looper = StopWalk
-	
+	egoObject.scaleX = 160
+	egoObject.scaleY = 160
+
 	idObject.loop = 8
 	idObject.cel = 7
 	idObject.looper = StandAndLook

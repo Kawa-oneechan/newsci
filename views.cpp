@@ -144,7 +144,7 @@ void View::Initialize()
 	Sol.set_function("DrawPolys", DrawPolys);
 }
 
-void View::Draw(int loop, int cel, int left, int top, int priority, bool noOffset)
+void View::Draw(int loop, int cel, int left, int top, int priority, int scaleX, int scaleY, bool noOffset)
 {
 	auto image = this->image;
 	auto pixels = image->pixels;
@@ -157,61 +157,83 @@ void View::Draw(int loop, int cel, int left, int top, int priority, bool noOffse
 	auto sx = theCel.l;
 	auto sy = theCel.t;
 
-	//get clipped
+	auto ox = theCel.x;
+	auto oy = theCel.y;
+
 	auto w = theCel.w;
 	auto h = theCel.h;
-	auto l = left;
-	auto t = top;
-	if (!noOffset)
+
+	auto scalingX = new uint16_t[screenWidth]();
+	auto scalingY = new uint16_t[screenHeight]();
+	auto scaledWidth = (w * scaleX) >> 7;
+	auto scaledHeight = (h * scaleY) >> 7;
+	if (scaledWidth < 0) scaledWidth = 0;
+	if (scaledHeight < 0) scaledHeight = 0;
+	if (scaledWidth > screenWidth) scaledWidth = screenWidth;
+	if (scaledHeight > screenHeight) scaledHeight = screenHeight;
+	auto scaledOX = (ox * scaleX) >> 7;
+	auto scaledOY = (oy * scaleY) >> 7;
+
+	auto l = left - (scaledWidth / 2) + scaledOX;
+	auto t = top - scaledHeight;
+
+	int pixelNo = 0;
+	int scaledPixel = 0;
+	int scaledPixelNo = 0;
+	int prevScaledPixelNo = 0;
+	while (pixelNo < h)
 	{
-		l = left - (w / 2) + theCel.x;
-		t = top - (h / 1) + theCel.y;
+		scaledPixelNo = scaledPixel >> 7;
+		for (; prevScaledPixelNo <= scaledPixelNo; prevScaledPixelNo++)
+			scalingY[prevScaledPixelNo] = pixelNo;
+		pixelNo++;
+		scaledPixel += scaleY;
 	}
-	if (l + w > screenWidth)
-		w = screenWidth - l;
-	if (t + h > screenHeight)
-		h = screenHeight - t;
-	if (l < 0)
+	pixelNo--;
+	scaledPixelNo++;
+	for (; scaledPixelNo < scaledHeight; scaledPixelNo++)
+		scalingY[scaledPixelNo] = pixelNo;
+	pixelNo = 0;
+	scaledPixel = scaledPixelNo = prevScaledPixelNo = 0;
+	while (pixelNo < w)
 	{
-		if (!theLoop.mirror)
-			sx += -l;
-		w -= -l;
-		l = 0;
+		scaledPixelNo = scaledPixel >> 7;
+		for (; prevScaledPixelNo <= scaledPixelNo; prevScaledPixelNo++)
+			scalingX[prevScaledPixelNo] = pixelNo;
+		pixelNo++;
+		scaledPixel += scaleX;
 	}
-	if (t < 0)
-	{
-		sy += -t;
-		h -= -t;
-		t = 0;
-	}
+	pixelNo--;
+	scaledPixelNo++;
+	for (; scaledPixelNo < scaledWidth; scaledPixelNo++)
+		scalingX[scaledPixelNo] = pixelNo;
 
 	if (!theLoop.mirror)
 	{
-		for (auto y = 0; y < h; y++)
+		for (auto y = 0; y < scaledHeight; y++)
 		{
-			for (auto x = 0; x < w; x++)
+			for (auto x = 0; x < scaledWidth; x++)
 			{
 				auto tx = l + x;
 				auto ty = t + y;
-				auto pixel = pixels[((sy + y) * image->width) + (sx + x)];
+				auto pixel = pixels[((sy + scalingY[y]) * image->width) + sx + scalingX[x]];
 				SetPriPixel(tx, ty, pixel, priority);
 			}
 		}
 	}
 	else
 	{
-		for (auto y = 0; y < h; y++)
+		for (auto y = 0; y < scaledHeight; y++)
 		{
-			for (auto x1 = w - 1, x2 = 0; x1 >= 0; --x1, x2++)
+			for (auto x1 = scaledWidth - 1, x2 = 0; x1 >= 0; --x1, x2++)
 			{
 				auto tx = l + x2;
 				auto ty = t + y;
-				auto pixel = pixels[((sy + y) * image->width) + (sx + x1)];
+				auto pixel = pixels[((sy + scalingY[y]) * image->width) + sx + scalingX[x1]];
 				SetPriPixel(tx, ty, pixel, priority);
 			}
 		}
 	}
-
 }
 
 sol::table View::GetLastSeenRect(int loop, int cel, int left, int top)

@@ -30,27 +30,10 @@ void DrawCursor()
 
 	int sx = 0;
 	int sy = 0;
-	//get clipped
 	auto w = cursorImg->width;
 	auto h = cursorImg->height;
 	auto l = mouseX - cursorHotX;
 	auto t = mouseY - cursorHotY;
-	if (l + w > screenWidth)
-		w = screenWidth - l;
-	if (t + h > screenHeight)
-		h = screenHeight - t;
-	if (l < 0)
-	{
-		sx += -l;
-		w -= -l;
-		l = 0;
-	}
-	if (t < 0)
-	{
-		sy += -t;
-		h -= -t;
-		t = 0;
-	}
 
 	for (auto y = 0; y < h; y++)
 	{
