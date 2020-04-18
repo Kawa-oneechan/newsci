@@ -217,7 +217,7 @@ void View::Draw(int loop, int cel, int left, int top, int priority, int scaleX, 
 				auto tx = l + x;
 				auto ty = t + y;
 				auto pixel = pixels[((sy + scalingY[y]) * image->width) + sx + scalingX[x]];
-				SetPriPixel(tx, ty, pixel, priority);
+				SetPixel(tx, ty, pixel, priority);
 			}
 		}
 	}
@@ -230,7 +230,7 @@ void View::Draw(int loop, int cel, int left, int top, int priority, int scaleX, 
 				auto tx = l + x2;
 				auto ty = t + y;
 				auto pixel = pixels[((sy + scalingY[y]) * image->width) + sx + scalingX[x1]];
-				SetPriPixel(tx, ty, pixel, priority);
+				SetPixel(tx, ty, pixel, priority);
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 #include "NewSCI.h"
 
-Port mainPort, currentPort;
+Port mainPort, screenPort, currentPort;
 std::map<int, Font*> fonts;
 
 Port::Port()

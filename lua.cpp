@@ -54,8 +54,19 @@ char scan2ascii[] =
 
 void PrepareFrame()
 {
-	memcpy(visualBuffer, visualBackground, screenSize * sizeof(Color));
-	memcpy(priorityBuffer, priorityBackground, screenSize * sizeof(Color));
+//	memcpy(visualBuffer, visualBackground, screenSize * sizeof(Color));
+//	memcpy(priorityBuffer, priorityBackground, screenSize * sizeof(Color));
+	auto pt = currentPort.portRect.t;
+	for (auto t = 0; t < screenHeight - pt; t++)
+	{
+		auto td = (pt + t) * screenWidth;
+		auto ld = 0;
+		auto ts = t * screenWidth;
+		auto ls = 0;
+		auto width = screenWidth;
+		memcpy(visualBuffer + td + ld, visualBackground + ts + ls, width * sizeof(Pixel));
+		memcpy(priorityBuffer + td + ld, priorityBackground + ts + ls, width * sizeof(Pixel));
+	}
 }
 
 extern void OpenGL_Present();
@@ -140,6 +151,20 @@ void Display(std::string text, int x, int y)
 	currentPort.font->Write(text, &rect, 0);
 }
 
+void DrawStatus(std::string text)
+{
+	auto oldPort = currentPort;
+	currentPort = screenPort;
+	currentPort.fgColor = LTGRAY;
+	auto r = Rect(0, 0, screenWidth, 10);
+	FillRect(&r);
+	currentPort.SetFont(0);
+	currentPort.fgColor = BLACK;
+	currentPort.font->RenderString(text, 0, 1);
+	r = Rect(0, 9, screenWidth, 10);
+	DrawRect(&r);
+	currentPort = oldPort;
+}
 
 // This part shamelessly stolen from SCI11
 
@@ -352,7 +377,6 @@ void DoBresen(sol::table view)
 
 // End stolen goods
 
-
 void Lua::Initialize()
 {
 	Sol.open_libraries(sol::lib::base, sol::lib::table, sol::lib::math);
@@ -369,6 +393,7 @@ void Lua::Initialize()
 	Sol.set_function("ATan", ATan);
 	Sol.set_function("InitBresen", InitBresen);
 	Sol.set_function("DoBresen", DoBresen);
+	Sol.set_function("DrawStatus", DrawStatus);
 }
 
 void Lua::RunScript(std::string script)

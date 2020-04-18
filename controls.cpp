@@ -107,7 +107,11 @@ bool DrawWindowInputControl(sol::table controlDef, int leftOffset = 0, int topOf
 
 	currentPort.SetPen(controlDef["color"].get_or(0) | 0xFF000000);
 	r.Inflate(-1, -3);
-	currentPort.font->Write(text, &r, 0);
+	auto oldRect = currentPort.portRect;
+	currentPort.portRect = r;
+	auto textRect = Rect(0, 0, width, height);
+	currentPort.font->Write(text, &textRect, 0);
+	currentPort.portRect = oldRect;
 	r.Inflate(1, 3);
 	currentPort.SetPen(inside ? (controlDef["border"].get_or(0) | 0xFF000000) : LTGRAY);
 	DrawRect(&r);
@@ -213,6 +217,9 @@ void DrawWindow(sol::table windowDef)
 	auto shadow = windowDef["shadow"].get<bool>();
 	auto in = Rect(r);
 
+	auto oldPort = currentPort;
+	currentPort = screenPort;
+
 	currentPort.SetPen(BLACK);
 	if (shadow)
 	{
@@ -279,4 +286,6 @@ void DrawWindow(sol::table windowDef)
 	{
 		EatTheMouse();
 	}
+
+	currentPort = oldPort;
 }

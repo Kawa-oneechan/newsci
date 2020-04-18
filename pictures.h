@@ -62,40 +62,34 @@ public:
 	visualBuffer[drP] = (~drC) | 0xFF000000; \
 	} } }
 
-inline void SetPixel(int X, int Y, Color C)
+inline void SetPixel(int X, int Y, Color C, int pri = -1)
 {
-	if ((C) >> 24 == 0)
+	if (C >> 24 == 0)
 		return;
-	if ((X) < 0 || (X) >= screenWidth || (Y) < 0 || (Y) >= screenHeight)
+	if (X < 0 || X > currentPort.portRect.r - currentPort.portRect.l || Y < 0 || Y > currentPort.portRect.b - currentPort.portRect.t)
 		return;
-	const auto place = ((Y) * screenWidth) + (X);
-	if ((C) >> 24 == 0xFF)
-		visualBuffer[place] = (C);
-	else 
+	const auto place = ((Y + currentPort.portRect.t) * screenWidth) + (X + currentPort.portRect.l);
+	auto priHere = (int)priorityBuffer[place] & 0xFF;
+	if (pri == -1 || pri + currentPort.portRect.t >= priHere)
 	{
-		auto now = visualBuffer[place];
-		auto inR = ((C >> 0) & 0xFF);
-		auto inG = ((C >> 8) & 0xFF);
-		auto inB = ((C >> 16) & 0xFF);
-		auto inA = ((C >> 24) & 0xFF);
-		auto outR = ((now >> 0) & 0xFF);
-		auto outG = ((now >> 8) & 0xFF);
-		auto outB = ((now >> 16) & 0xFF);
-		outR = ((inR * inA) + outR * (255 - inA)) >> 8;
-		outG = ((inG * inA) + outG * (255 - inA)) >> 8;
-		outB = ((inB * inA) + outB * (255 - inA)) >> 8;
-		visualBuffer[place] = (outR) | (outG << 8) | (outB << 16);
+		if (C >> 24 == 0xFF)
+			visualBuffer[place] = C;
+		else
+		{
+			auto now = visualBuffer[place];
+			auto inR = (C >> 0) & 0xFF;
+			auto inG = (C >> 8) & 0xFF;
+			auto inB = (C >> 16) & 0xFF;
+			auto inA = (C >> 24) & 0xFF;
+			auto outR = (now >> 0) & 0xFF;
+			auto outG = (now >> 8) & 0xFF;
+			auto outB = (now >> 16) & 0xFF;
+			outR = ((inR * inA) + outR * (255 - inA)) >> 8;
+			outG = ((inG * inA) + outG * (255 - inA)) >> 8;
+			outB = ((inB * inA) + outB * (255 - inA)) >> 8;
+			visualBuffer[place] = (outR) | (outG << 8) | (outB << 16);
+		}
+		if (pri > -1)
+			priorityBuffer[place] = pri + currentPort.portRect.t;
 	}
-}
-
-inline void SetPriPixel(int X, int Y, int C, int pri)
-{
-	if ((X) < 0 || (X) >= screenWidth || (Y) < 0 || (Y) >= screenHeight)
-		return;
-	auto priHere = (int)priorityBuffer[(Y * screenWidth) + X] & 0xFF;
-	if (pri > -1 && priHere > pri)
-		return;
-	SetPixel(X, Y, C);
-	if ((C) >> 24 != 0)
-		priorityBuffer[((Y) * screenWidth) + (X)] = pri;
 }

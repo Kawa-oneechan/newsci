@@ -3,15 +3,13 @@ Initialize = function()
 	LoadScene("testroom.pic.json")
 
 	egoView = View.new("ego.view.json")
-	egoObject = ViewObj.new(egoView, 128, 180)
+	egoObject = ViewObj.new(egoView, 128, 170)
 	idView = View.new("id.view.json")
-	idObject = ViewObj.new(idView, 156, 150)
+	idObject = ViewObj.new(idView, 156, 140)
 	table.insert(cast, egoObject)
 	table.insert(cast, idObject)
 
 	egoObject.looper = StopWalk
-	egoObject.scaleX = 160
-	egoObject.scaleY = 160
 
 	idObject.loop = 8
 	idObject.cel = 7
@@ -55,7 +53,7 @@ Initialize = function()
 			},
 			{
 				type = 3, --DText
-				text = "lol",
+				text = "lollerskates on ice, also yuri",
 				top = 32,
 				width = 128
 			}

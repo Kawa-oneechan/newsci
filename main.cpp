@@ -35,6 +35,9 @@ void DrawCursor()
 	auto l = mouseX - cursorHotX;
 	auto t = mouseY - cursorHotY;
 
+	auto oldPort = currentPort;
+	currentPort = screenPort;
+
 	for (auto y = 0; y < h; y++)
 	{
 		for (auto x = 0; x < w; x++)
@@ -45,6 +48,8 @@ void DrawCursor()
 			SetPixel(tx, ty, pixel);
 		}
 	}
+
+	currentPort = oldPort;
 }
 
 void SetCursor(const char* filename, int x, int y)
@@ -220,9 +225,15 @@ int main(int argc, char*argv[])
 	sysFont = Font::Load("0.fon");
 	debugFont = Font::Load("999.fon");
 
-	mainPort.portRect.t = 0;
+	screenPort.portRect.t = 0;
+	screenPort.portRect.l = 0;
+	screenPort.portRect.b = screenHeight - 1;
+	screenPort.portRect.r = screenWidth - 1;
+	screenPort.SetFont(sysFont);
+
+	mainPort.portRect.t = 10;
 	mainPort.portRect.l = 0;
-	mainPort.portRect.b = screenHeight - 1;
+	mainPort.portRect.b = screenHeight - 1 - 10;
 	mainPort.portRect.r = screenWidth - 1;
 	mainPort.SetFont(sysFont);
 	currentPort = mainPort;

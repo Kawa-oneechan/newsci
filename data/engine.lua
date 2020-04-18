@@ -65,6 +65,7 @@ function GameLoop()
 
 		Animate()
 		ShowFrame()		
+		DrawStatus("NewSCI Test");
 		Delay(delay)
 	end
 end

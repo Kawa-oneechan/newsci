@@ -36,4 +36,4 @@ public:
 	void Close();
 };
 
-extern Port mainPort, currentPort;
+extern Port mainPort, screenPort, currentPort;
