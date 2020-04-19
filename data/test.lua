@@ -69,25 +69,12 @@ Initialize = function()
 end,
 
 Tick = function()
---[[
-	if egoDir == 1 then
-		egoX = egoX + 4
-		egoObject.loop = 0
-		if egoX > 270 then egoDir = 0 end
-	else
-		egoX = egoX - 4
-		egoObject.loop = 1
-		if egoX < -20 then egoDir = 1 end
-	end
-]]--
+	idObject:SetHeading(GetAngle(idObject.x, idObject.y, egoObject.x, egoObject.y))
 
-	-- idObject:SetHeading(GetAngle(idObject.x, idObject.y, egoObject.x, egoObject.y))
-
-	-- egoObject:Move(egoX, egoObject.y)
-		
 	for k, v in pairs(events) do
 		if not v.handled then
 			if v.type == 3 then -- mouse click
+				LocalizeEvent(v)
 				-- idObject:Move(v.x, v.y)
 				egoObject:MoveTo(v.x, v.y)
 				v.handled = true
@@ -135,14 +122,14 @@ Tick = function()
 end,
 
 Serialize = function()
-	Serializer.SetInteger(egoX)
-	Serializer.SetInteger(egoDir)
+--	Serializer.SetInteger(egoX)
+--	Serializer.SetInteger(egoDir)
 end,
 
 Deserialize = function()
 	currentScene.Initialize()
-	egoX = Serializer.GetInteger()
-	egoDir = Serializer.GetInteger()
-	egoObject:Move(egoX, 148)
+--	egoX = Serializer.GetInteger()
+--	egoDir = Serializer.GetInteger()
+--	egoObject:Move(egoX, 148)
 end
 }

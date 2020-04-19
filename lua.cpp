@@ -97,6 +97,17 @@ void ScaleMouse(signed int *x, signed int *y)
 	*y = nY;
 }
 
+void LocalizeEvent(sol::table ev)
+{
+	auto type = ev["type"].get<int>();
+	if (type < 1 || type > 3)
+		return;
+	auto x = ev["x"].get<int>();
+	auto y = ev["y"].get<int>();
+	ev["x"] = x - currentPort.portRect.l;
+	ev["y"] = y - currentPort.portRect.t;
+}
+
 //TODO: REPLACE FMT::FORMAT AND LUA::RUNSCRIPT CALLS WITH SOL, YOU'RE A BIG BOY NOW.
 void HandleEvents()
 {
@@ -394,6 +405,7 @@ void Lua::Initialize()
 	Sol.set_function("InitBresen", InitBresen);
 	Sol.set_function("DoBresen", DoBresen);
 	Sol.set_function("DrawStatus", DrawStatus);
+	Sol.set_function("LocalizeEvent", LocalizeEvent);
 }
 
 void Lua::RunScript(std::string script)
