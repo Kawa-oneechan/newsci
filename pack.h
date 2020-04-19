@@ -19,10 +19,15 @@ namespace Pack
 	 * uint32	length
 	 */
 
+	///<summary>Initializes the packfile system.</summary>
 	extern void Load();
+	///<summary>Locates the given asset in the packfile and returns information on it.</summary>
 	extern PackFileRecord* Find(std::string filename);
+	///<summary>Returns the contents of the given asset.</summary>
 	extern char* Read(PackFileRecord* pfr);
+	///<summary>Returns the contents of the given asset.</summary>
 	extern char* Read(std::string filename);
 }
 
+///<summary>Returns the contents and optionally size of the given asset.</summary>
 extern Handle LoadFile(std::string filename, unsigned long *size);

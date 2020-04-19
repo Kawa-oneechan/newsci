@@ -209,8 +209,7 @@ bool DrawWindowInputControl(sol::table controlDef, int leftOffset = 0, int topOf
 
 void DrawWindow(sol::table windowDef)
 {
-	auto visible = windowDef["visible"].get<bool>();
-	if (!visible)
+	if (!windowDef["visible"].get<bool>())
 		return;
 	auto r = Rect(windowDef["box"][1].get<int>(), windowDef["box"][2].get<int>(), windowDef["box"][3].get<int>(), windowDef["box"][4].get<int>());
 	auto title = windowDef["title"].get<std::string>();

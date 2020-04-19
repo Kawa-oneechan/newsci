@@ -13,6 +13,7 @@ void Audio::Initialize()
 		auto r = FMOD::System_Create(&system);
 		r = system->init(4, FMOD_INIT_NORMAL, NULL);
 	}
+	//Hook up to Sol regardless so scripts don't break.
 	Sol.new_usertype<Audio>(
 		"Audio",
 		sol::constructors<Audio(std::string)>(),

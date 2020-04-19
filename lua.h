@@ -5,7 +5,6 @@
 #include "support\sol.hpp"
 
 extern sol::state Sol;
-//extern lua_State* lua;
 
 class Lua
 {

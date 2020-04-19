@@ -2,6 +2,8 @@
 #include "types.h"
 #include "fonts.h"
 
+//TODO: rename things to be less blatantly SCI, remove anything we don't actually need.
+
 struct Port
 {
 	Point origin;
@@ -19,21 +21,6 @@ public:
 	void SetPen(Color color);
 	void SetFont(Font* fontHnd);
 	void SetFont(int fontNum);
-};
-
-struct Window
-{
-	Port port;
-	Rect frame;
-	Rect saveRect;
-	int type;
-	std::string title;
-	int visible;
-
-public:
-	Window(Rect theFrame, std::string theTitle, int theType, int vis);
-	void Draw();
-	void Close();
 };
 
 extern Port mainPort, screenPort, currentPort;

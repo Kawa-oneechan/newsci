@@ -66,6 +66,7 @@ void Flush()
 	OpenGL_Present();
 }
 
+//TODO: use to-be-written generic DrawWindow function as described in ports.h, *or* a windowDef.
 void Message(std::string text, std::string title)
 {
 	if (debugFont == NULL) debugFont = Font::Load("999.fon");
@@ -77,10 +78,10 @@ void Message(std::string text, std::string title)
 		rect.r = titleWidth;
 	rect.Center();
 	rect.Inflate(4, 4);
-	Window myWindow(rect, title, 1, true);
-	myWindow.port.font = debugFont;
+	//Window myWindow(rect, title, 1, true);
+	//myWindow.port.font = debugFont;
 	rect.Inflate(-4, -4);
-	myWindow.port.font->Write(text, &rect, 0);
+	//myWindow.port.font->Write(text, &rect, 0);
 
 	SDL_Event ev;
 	Flush();
@@ -103,7 +104,7 @@ void Message(std::string text, std::string title)
 		SDL_RenderPresent(sdlRenderer);
 	}
 
-	myWindow.Close();
+	//myWindow.Close();
 }
 
 extern void OpenGL_Initialize();
