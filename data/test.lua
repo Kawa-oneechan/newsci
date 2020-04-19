@@ -75,8 +75,8 @@ Tick = function()
 		if not v.handled then
 			if v.type == 3 then -- mouse click
 				LocalizeEvent(v)
-				-- idObject:Move(v.x, v.y)
-				egoObject:MoveTo(v.x, v.y)
+				-- egoObject:MoveTo(v.x, v.y)
+				egoObject:PolyPath(v.x, v.y)
 				v.handled = true
 			elseif v.type == 17 then -- key press
 				if v.scan == 62 then -- F5: Save

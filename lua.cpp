@@ -244,8 +244,9 @@ void InitBresen(sol::table view)
 	int tdX, tdY, watchDog;
 	bool xAxis;
 
-	toX = view["moveTargetX"].get<int>();
-	toY = view["moveTargetY"].get<int>();
+	auto movePoints = view["movePoints"].get<sol::table>();
+	toX = movePoints[1].get<int>();
+	toY = movePoints[2].get<int>();
 
 	tdX = 2; /* view["stepSizeX"].get<int>(); */
 	tdY = 1; /* view["stepSizeY"].get<int>(); */
@@ -331,8 +332,11 @@ void DoBresen(sol::table view)
 
 	lastX = x = view["x"].get<int>();
 	lastY = y = view["y"].get<int>();
-	toX = view["moveTargetX"].get<int>();
-	toY = view["moveTargetY"].get<int>();
+	
+	auto movePoints = view["movePoints"].get<sol::table>();
+	toX = movePoints[1].get<int>();
+	toY = movePoints[2].get<int>();
+
 	xAxis = view["bresenXA"].get<bool>();
 	dX = view["bresenDX"].get<int>();
 	dY = view["bresenDY"].get<int>();
@@ -388,6 +392,18 @@ void DoBresen(sol::table view)
 
 // End stolen goods
 
+sol::table GetPath(int16_t aX, int16_t aY, int16_t bX, int16_t bY)
+{
+	//TODO: actually get path.
+
+	//Until then we just pretend it's all in a straight line.
+	auto newPath = Sol.create_table();
+	newPath.add(aX, aY);
+	newPath.add(bX, bY);
+	newPath.add(0x7777, 0x7777);
+	return newPath;
+}
+
 void Lua::Initialize()
 {
 	Sol.open_libraries(sol::lib::base, sol::lib::table, sol::lib::math);
@@ -404,6 +420,7 @@ void Lua::Initialize()
 	Sol.set_function("ATan", ATan);
 	Sol.set_function("InitBresen", InitBresen);
 	Sol.set_function("DoBresen", DoBresen);
+	Sol.set_function("GetPath", GetPath);
 	Sol.set_function("DrawStatus", DrawStatus);
 	Sol.set_function("LocalizeEvent", LocalizeEvent);
 }

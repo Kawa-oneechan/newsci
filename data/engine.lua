@@ -131,6 +131,7 @@ ViewObj.new = class(function(v, theView, theX, theY)
 	v.Move = vobMove
 	v.SetHeading = vobSetHeading
 	v.MoveTo = vobMoveTo
+	v.PolyPath = vobPolyPath
 	v.Stop = vobStop
 end)
 
@@ -166,14 +167,26 @@ function vobStop(v)
 end
 
 function vobMoveTo(v, x, y)
-	v.moveTargetX = x
-	v.moveTargetY = y
+	v.movePoints = { x, y }
 	v.moveCompleted = false
 	v.moveLastX = 0
 	v.moveLastY = 0
 	v:SetHeading(GetAngle(v.x, v.y, x, y))
 	InitBresen(v)
 	v.mover = moverMoveTo
+	v.moving = true
+end
+
+function vobPolyPath(v, x, y)
+	v.moveCompleted = false
+	v.moveLastX = 0
+	v.moveLastY = 0
+	v.movePoints = GetPath(v.x, v.y, x, y);
+	table.remove(v.movePoints, 1);
+	table.remove(v.movePoints, 1);
+	v:SetHeading(GetAngle(v.x, v.y, v.movePoints[1], v.movePoints[2]))
+	InitBresen(v)
+	v.mover = moverPolyPath
 	v.moving = true
 end
 
@@ -184,10 +197,33 @@ function moverMoveTo(v)
 	if v.pri ~= -1 then
 		v.pri = v.y
 	end
-	if v.x == v.moveTargetX and v.y == v.moveTargetY then
+	if v.x == v.movePoints[1] and v.y == v.movePoints[2] then
 		v.moveCompleted = true
 		v.mover = nil
 		v.moving = false
+	end
+end
+
+function moverPolyPath(v)
+	v.moveLastX = v.x
+	v.moveLastY = v.y
+	DoBresen(v)
+	if v.pri ~= -1 then
+		v.pri = v.y + 2
+	end
+	if v.x == v.movePoints[1] and v.y == v.movePoints[2] then
+		print ("PolyPath: reached target.\n");
+		table.remove(v.movePoints, 1);
+		table.remove(v.movePoints, 1);
+		print ("PolyPath: next X is " .. v.movePoints[1] .. ".\n");
+		if v.movePoints[1] == 0x7777 then
+			v.moveCompleted = true
+			v.mover = nil
+			v.moving = false
+		else
+			v:SetHeading(GetAngle(v.x, v.y, v.movePoints[1], v.movePoints[2]))
+			InitBresen(v)		
+		end
 	end
 end
 
