@@ -30,11 +30,89 @@ void Serializer::Load(std::string filename)
 	Sol["Deserialize"](filename);
 }
 
+void serializeThing(std::pair<sol::object, sol::object> thing, int indent);
+
+void serializeTable(sol::table table, int indent)
+{
+	Serializer::SetInteger(5);
+	Serializer::SetInteger(table.size());
+	for (auto thing : table)
+		serializeThing(thing, indent);
+}
+
+void serializeThing(std::pair<sol::object, sol::object> thing, int indent)
+{
+	auto keyType = thing.first.get_type();
+	auto valType = thing.second.get_type();
+	std::string key;
+	if (keyType == sol::type::string)
+	{
+		key = thing.first.as<std::string>();
+		if (key == "base")
+			return;
+		if (key == "math")
+			return;
+		if (key[0] == '_')
+			return;
+		if (key.substr(0, 4) == "sol.")
+			return;
+		printf("\n");
+		for (int i = 0; i < indent; i++) printf("\t");
+		printf("\"%s\", %d", key.c_str(), valType);
+	}
+	else if (keyType == sol::type::number)
+	{
+		char lol[16];
+		sprintf_s(lol, 16, "#%d", thing.first.as<int>());
+		key = std::string(lol);
+	}
+
+	if (valType == sol::type::number)
+	{
+		Serializer::SetString(key);
+		Serializer::SetInteger(3);
+		Serializer::SetInteger(thing.second.as<int>());
+		printf(" -> %f", thing.second.as<float>());
+	}
+	else if (valType == sol::type::boolean)
+	{
+		Serializer::SetString(key);
+		Serializer::SetInteger(1);
+		Serializer::SetInteger((int)thing.second.as<bool>());
+		printf(" -> %s", thing.second.as<bool>() ? "true" : "false");
+	}
+	else if (valType == sol::type::string)
+	{
+		Serializer::SetString(key);
+		Serializer::SetInteger(4);
+		Serializer::SetString(thing.second.as<std::string>());
+		printf(" -> \"%s\"", thing.second.as<std::string>().c_str());
+	}
+	else if (valType == sol::type::table)
+	{
+		Serializer::SetString(key);
+		serializeTable(thing.second.as<sol::table>(), indent + 1);
+	}
+	else if (valType == sol::type::function)
+		printf(" -> function");
+	else if (valType == sol::type::thread)
+		printf(" -> thread");
+	else if (valType == sol::type::userdata)
+		printf(" -> user data");
+	else if (valType == sol::type::lightuserdata)
+		printf(" -> light user data");
+}
+
 void Serializer::StartSave(std::string filename)
 {
 	if (Serializer::out != NULL)
 		return;
 	fopen_s(&Serializer::out, filename.c_str(), "wb");
+
+	for (auto thing : Sol)
+		serializeThing(thing, 0);
+	Serializer::SetInteger(0x99999999);
+	Serializer::Finish();
 }
 
 void Serializer::StartLoad(std::string filename)
@@ -75,7 +153,6 @@ void Serializer::SetString(std::string s)
 		return;
 	SetInteger(s.length());
 	fwrite(s.c_str(), sizeof(char), s.length(), Serializer::out);
-
 }
 
 std::string Serializer::GetString()
