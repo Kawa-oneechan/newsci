@@ -10,6 +10,7 @@ Initialize = function()
 	table.insert(cast, idObject)
 
 	egoObject.looper = StopWalk
+	egoObject.movePoints = { 0, 0 }
 
 	idObject.loop = 8
 	idObject.cel = 7
@@ -101,13 +102,13 @@ Tick = function()
 						egoObject.walkDir = 0
 					else
 						if v.scan == 79 then -- right
-							egoObject:MoveTo(1000, egoObject.y)
+							egoObject:PolyKey(1000, egoObject.y)
 						elseif v.scan == 80 then -- left
-							egoObject:MoveTo(-1000, egoObject.y)
+							egoObject:PolyKey(-1000, egoObject.y)
 						elseif v.scan == 81 then -- down
-							egoObject:MoveTo(egoObject.x, 1000)
+							egoObject:PolyKey(egoObject.x, 1000)
 						elseif v.scan == 82 then -- up
-							egoObject:MoveTo(egoObject.x, -1000)
+							egoObject:PolyKey(egoObject.x, -1000)
 						end
 						egoObject.walkDir = v.scan
 					end
@@ -118,6 +119,9 @@ Tick = function()
 	end
 
 --	DrawPolys()	
+	if (egoObject.movePoints ~= nil) then
+		Display("X", egoObject.movePoints[1], egoObject.movePoints[2]);
+	end
 
 end,
 

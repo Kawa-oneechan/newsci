@@ -112,6 +112,7 @@ move /Y resource.nws out</Command>
     <ClCompile Include="controls.cpp" />
     <ClCompile Include="fonts.cpp" />
     <ClCompile Include="audio.cpp" />
+    <ClCompile Include="kpathing.cpp" />
     <ClCompile Include="lua.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="opengl.cpp" />

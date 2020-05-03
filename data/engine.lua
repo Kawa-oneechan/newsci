@@ -132,6 +132,7 @@ ViewObj.new = class(function(v, theView, theX, theY)
 	v.SetHeading = vobSetHeading
 	v.MoveTo = vobMoveTo
 	v.PolyPath = vobPolyPath
+	v.PolyKey = vobPolyKey
 	v.Stop = vobStop
 end)
 
@@ -181,9 +182,23 @@ function vobPolyPath(v, x, y)
 	v.moveCompleted = false
 	v.moveLastX = 0
 	v.moveLastY = 0
-	v.movePoints = GetPath(v.x, v.y, x, y);
+	v.movePoints = GetPath(v.x, v.y, x, y, 1);
 	table.remove(v.movePoints, 1);
 	table.remove(v.movePoints, 1);
+	v:SetHeading(GetAngle(v.x, v.y, v.movePoints[1], v.movePoints[2]))
+	InitBresen(v)
+	v.mover = moverPolyPath
+	v.moving = true
+end
+
+function vobPolyKey(v, x, y)
+	v.moveCompleted = false
+	v.moveLastX = 0
+	v.moveLastY = 0
+	v.movePoints = GetPath(v.x, v.y, x, y, 0);
+	table.remove(v.movePoints, 1);
+	table.remove(v.movePoints, 1);
+	v.movePoints[3] = 0x7777;
 	v:SetHeading(GetAngle(v.x, v.y, v.movePoints[1], v.movePoints[2]))
 	InitBresen(v)
 	v.mover = moverPolyPath

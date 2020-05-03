@@ -391,17 +391,7 @@ void DoBresen(sol::table view)
 
 // End stolen goods
 
-sol::table GetPath(int16_t aX, int16_t aY, int16_t bX, int16_t bY)
-{
-	//TODO: actually get path.
-
-	//Until then we just pretend it's all in a straight line.
-	auto newPath = Sol.create_table();
-	newPath.add(aX, aY);
-	newPath.add(bX, bY);
-	newPath.add(0x7777, 0x7777);
-	return newPath;
-}
+extern sol::table DoGetPath(int16_t aX, int16_t aY, int16_t bX, int16_t bY, int16_t opt);
 
 void Lua::Initialize()
 {
@@ -419,7 +409,7 @@ void Lua::Initialize()
 	Sol.set_function("ATan", ATan);
 	Sol.set_function("InitBresen", InitBresen);
 	Sol.set_function("DoBresen", DoBresen);
-	Sol.set_function("GetPath", GetPath);
+	Sol.set_function("GetPath", DoGetPath);
 	Sol.set_function("DrawStatus", DrawStatus);
 	Sol.set_function("LocalizeEvent", LocalizeEvent);
 }
