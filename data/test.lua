@@ -77,7 +77,7 @@ Tick = function()
 			if v.type == 3 then -- mouse click
 				LocalizeEvent(v)
 				-- egoObject:MoveTo(v.x, v.y)
-				egoObject:PolyPath(v.x, v.y)
+				egoObject:PolyPath(v.x, v.y + 10)
 				v.handled = true
 			elseif v.type == 17 then -- key press
 				if v.scan == 62 then -- F5: Save
@@ -118,9 +118,9 @@ Tick = function()
 		end
 	end
 
---	DrawPolys()	
-	if (egoObject.movePoints ~= nil) then
-		Display("X", egoObject.movePoints[1], egoObject.movePoints[2]);
+	DrawPolys()	
+	if (egoObject.mover ~= nil) then
+		DrawLine(egoObject.x, egoObject.y, egoObject.movePoints[1], egoObject.movePoints[2], 0xFF00FFFF);
 	end
 
 end,

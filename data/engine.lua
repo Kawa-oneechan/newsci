@@ -237,7 +237,7 @@ function moverPolyPath(v)
 			v.moving = false
 		else
 			v:SetHeading(GetAngle(v.x, v.y, v.movePoints[1], v.movePoints[2]))
-			InitBresen(v)		
+			InitBresen(v)
 		end
 	end
 end

@@ -107,7 +107,6 @@ void LocalizeEvent(sol::table ev)
 	ev["y"] = y - currentPort.portRect.t;
 }
 
-//TODO: REPLACE FMT::FORMAT AND LUA::RUNSCRIPT CALLS WITH SOL, YOU'RE A BIG BOY NOW.
 void HandleEvents()
 {
 	SDL_Event ev;

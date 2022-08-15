@@ -3097,9 +3097,12 @@ sol::table DoGetPath(int16_t aX, int16_t aY, int16_t bX, int16_t bY, int16_t opt
 		auto x = *point++;
 		auto y = *point++;
 		printf("%d,%d ", x, y);
-		newPath.add(x, y);
 		if (x == 0x7777)
+		{
+			newPath.add(0x7777, 0x7777);
 			break;
+		}
+		newPath.add(x - currentPort.portRect.l, y - currentPort.portRect.t);
 	}
 	printf("\n");
 

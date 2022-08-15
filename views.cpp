@@ -120,12 +120,12 @@ void DrawPolys()
 			auto x = poly[i + 0].get<int>();
 			auto y = poly[i + 1].get<int>();
 			if (j > 0)
-				DrawLine(lastX, lastY, x, y, excluding ? RED : GREEN);
+				DrawLine(lastX, lastY - 10, x, y - 10, excluding ? RED : GREEN);
 			lastX = x;
 			lastY = y;
 		}
 		//Close it up
-		DrawLine(lastX, lastY, poly[2].get<int>(), poly[3].get<int>(), excluding ? RED : GREEN);
+		DrawLine(lastX, lastY - 10, poly[2].get<int>(), poly[3].get<int>() - 10, excluding ? RED : GREEN);
 	}
 }
 
